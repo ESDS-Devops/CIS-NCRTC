@@ -1,0 +1,59 @@
+- name: MAIN | Show OS version
+  debug:
+    msg: "OS VERSION - {{ ansible_os_family }} - {{ ansible_distribution_major_version }}"
+
+- name: Check OS family
+  fail:
+    msg: "This role can only be run against SUSE15/OpenSUSE15. {{ ansible_os_family }}/{{ ansible_distribution }}/{{ ansible_distribution_major_version }} is not supported."
+  when: not (ansible_os_family == 'Suse' and ansible_distribution_major_version in ['15'])
+  tags:
+    - always
+
+- name: MAIN | Check ansible version
+  fail:
+    msg: "You must use Ansible 2.9 or greater"
+  when: ansible_version.major < 2 or (ansible_version.major == 2 and ansible_version.minor < 9)
+  tags:
+    - always
+
+- name: Include prelim tasks
+  include_tasks: prelim.yml
+  tags:
+    - always
+
+- name: Include section1 tasks
+  include_tasks: section1.yml
+  when: suse15cis_section1 | default(false)
+  tags:
+    - suse15cis_section1
+
+- name: Include section2 tasks
+  include_tasks: section2.yml
+  when: suse15cis_section2 | default(false)
+  tags:
+    - suse15cis_section2
+
+- name: Include section3 tasks
+  include_tasks: section3.yml
+  when: suse15cis_section3 | default(false)
+  tags:
+    - suse15cis_section3
+
+- name: Include section4 tasks
+  include_tasks: section4.yml
+  when: suse15cis_section4 | default(false)
+  tags:
+    - suse15cis_section4
+
+- name: Include section5 tasks
+  include_tasks: section5.yml
+  when: suse15cis_section5 | default(false)
+  tags:
+    - suse15cis_section5
+
+- name: Include section6 tasks
+  include_tasks: section6.yml
+  when: suse15cis_section6 | default(false)
+  tags:
+    - suse15cis_section6
+

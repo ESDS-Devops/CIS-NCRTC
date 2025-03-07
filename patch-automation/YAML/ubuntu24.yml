@@ -1,0 +1,57 @@
+---
+- hosts: all
+  become: true
+  vars:
+    destination_files:
+      - /etc/motd
+      - /etc/issue
+      - /etc/issue.net
+
+  pre_tasks:
+  - block:
+    - name: Create Banner Template
+      template:
+        src: /home/govadmin/patch-automation/esds-cis/esds-cis/YAML/banner.txt.j2
+        dest: "{{ item }}"
+        owner: govadmin
+        group: govadmin
+        mode: '0644'
+      loop: "{{ destination_files }}"
+
+    - name: Copy Banner to Target Systems
+      copy:
+        src: /home/govadmin/patch-automation/esds-cis/esds-cis/YAML/banner.txt.j2
+        dest: "{{ item }}"
+        owner: govadmin
+        group: govadmin
+        mode: '0644'
+      loop: "{{ destination_files }}"
+
+
+    - name: Fetching OS name and version details
+      shell: cat /etc/os-release
+      register: release
+    - debug:
+        msg: "{{ item }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'NAME'"
+    - name: Registering OS name
+      set_fact:
+        OS_name: "{{ item.split('=')[1] }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'NAME'"
+    - name: Resgistering OS version
+      set_fact:
+        OS_version: "{{ item.split('=')[1] }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'VERSION'"
+    - name: Debug condition for role import
+      debug:
+        msg: "Conditions for role import - OS_name: {{ OS_name }}, OS_version major: {{ OS_version.split('.')[0] }}"
+    - import_role:
+        name: UBUNTU24-CIS
+      when:
+      - "'Ubuntu' in OS_name"
+      - "'24' in OS_version.split('.')[0]"
+  roles:
+  - { role: UBUNTU24-CIS, when: "'Ubuntu' in ansible_distribution or '24' in ansible_distribution"}

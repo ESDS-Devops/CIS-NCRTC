@@ -1,0 +1,1065 @@
+# Ansible Playbook for SUSE Linux CIS Hardening
+
+- name: SCORED | 6.2.8 | PATCH | Ensure users' dot files are not group or world writable
+  shell: "find /home -type f -name '.*' -perm /go+w -exec chmod go-w {} +"
+  when: suse15cis_rule_6_2_8
+  tags:
+    - level1
+    - patch
+    - rule_6_2_8
+
+- name: SCORED | 6.2.6 | PATCH | Ensure users' home directories permissions are 750 or more restrictive
+  shell: "find /home -mindepth 1 -maxdepth 1 -type d -exec chmod 750 {} +"
+  when: suse15cis_rule_6_2_6
+  tags:
+    - level1
+    - patch
+    - rule_6_2_6
+
+- name: SCORED | 6.2.5 | PATCH | Ensure all users' home directories exist
+  shell: |
+    awk -F: '($3 >= 1000 && $7 != "/sbin/nologin") {print $1 " " $6}' /etc/passwd |
+    while read user dir; do
+      if [ -d "$dir" ]; then
+        echo "Directory $dir already exists for user $user, skipping..."
+      else
+        mkdir -p "$dir" && chown "$user":"$user" "$dir" || echo "Failed to create $dir for $user"
+      fi
+    done
+  when: suse15cis_rule_6_2_5
+  tags:
+    - level1
+    - patch
+    - rule_6_2_5
+
+- name: SCORED | 6.2.18 | PATCH | Ensure shadow group is empty
+  shell: |
+    for user in $(awk -F: '$4 == "42" {print $1}' /etc/passwd); do usermod -g users $user; done
+  when: suse15cis_rule_6_2_18
+  tags:
+    - level1
+    - patch
+    - rule_6_2_18
+
+- name: SCORED | 6.1.9 | PATCH | Ensure no unowned files or directories exist
+  shell: "find / -xdev -nouser -exec chown root:root {} +"
+  when: suse15cis_rule_6_1_9
+  tags:
+    - level1
+    - patch
+    - rule_6_1_9
+
+- name: SCORED | 6.1.8 | PATCH | Ensure no world writable files exist
+  shell: "find / -xdev -type f -perm -002 -exec chmod o-w {} +"
+  when: suse15cis_rule_6_1_8
+  tags:
+    - level1
+    - patch
+    - rule_6_1_8
+
+- name: SCORED | 6.1.10 | PATCH | Ensure no ungrouped files or directories exist
+  shell: "find / -xdev -nogroup -exec chown root:root {} +"
+  when: suse15cis_rule_6_1_10
+  tags:
+    - level1
+    - patch
+    - rule_6_1_10
+
+- name: SCORED | 5.4.5 | PATCH | Ensure default user umask is configured
+  lineinfile:
+    path: /etc/login.defs
+    regexp: '^UMASK'
+    line: 'UMASK 027'
+  when: suse15cis_rule_5_4_5
+  tags:
+    - level1
+    - patch
+    - rule_5_4_5
+
+- name: SCORED | 5.4.4 | PATCH | Ensure default user shell timeout is configured
+  lineinfile:
+    path: /etc/profile.d/tmout.sh
+    line: 'readonly TMOUT=900; export TMOUT'
+    create: yes
+  when: suse15cis_rule_5_4_4
+  tags:
+    - level1
+    - patch
+    - rule_5_4_4
+
+- name: SCORED | 5.4.1.5 | PATCH | Ensure inactive password lock is 30 days or less
+  shell: |
+    for user in $(awk -F: '($3 >= 1000 && $7 != "/sbin/nologin") {print $1}' /etc/passwd); do
+      chage --inactive 30 "$user" || echo "Failed to set inactive lock for $user"
+    done
+  when: suse15cis_rule_5_4_1_5
+  tags:
+    - level1
+    - patch
+    - rule_5_4_1_5
+
+- name: SCORED | 5.3.3 | PATCH | Ensure password reuse is limited
+  lineinfile:
+    path: /etc/pam.d/common-password
+    line: 'password required pam_pwhistory.so remember=5'
+  when: suse15cis_rule_5_3_3
+  tags:
+    - level1
+    - patch
+    - rule_5_3_3
+
+- name: SCORED | 5.3.2 | PATCH | Ensure lockout for failed password attempts is configured
+  lineinfile:
+    path: /etc/pam.d/common-account
+    insertbefore: 'auth required pam_env.so'
+    line: 'auth required pam_tally2.so deny=5 onerr=fail unlock_time=900'
+  when: suse15cis_rule_5_3_2
+  tags:
+    - level1
+    - patch
+    - rule_5_3_2
+
+- name: SCORED | 4.2.1.5 | PATCH | Ensure rsyslog is configured to send logs to a remote log host
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.* '
+  notify: restart rsyslog
+  when: suse15cis_rule_4_2_1_5
+  tags:
+    - level1
+    - patch
+    - rule_4_2_1_5
+
+- name: SCORED | 4.2.1.4 | PATCH | Ensure logging is configured
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.emerg :omusrmsg:*'
+  notify: restart rsyslog
+  when: suse15cis_rule_4_2_1_4
+  tags:
+    - level1
+    - patch
+    - rule_4_2_1_4
+
+- name: SCORED | 2.3.4 | PATCH | Ensure telnet client is not installed
+  package:
+    name: telnet
+    state: absent
+  when: suse15cis_rule_2_3_4
+  tags:
+    - level1
+    - patch
+    - rule_2_3_4
+
+- name: SCORED | 1.3.3 | PATCH | Ensure sudo log file exists
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults logfile="/var/log/sudo.log"'
+    validate: 'visudo -cf %s'
+  when: suse15cis_rule_1_3_3
+  tags:
+    - level1
+    - patch
+    - rule_1_3_3
+
+- name: SCORED | 1.3.2 | PATCH | Ensure sudo commands use pty
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults use_pty'
+    validate: 'visudo -cf %s'
+  when: suse15cis_rule_1_3_2
+  tags:
+    - level1
+    - patch
+    - rule_1_3_2
+    
+- name: SCORED | 4.1.2.4 | PATCH | Ensure audit_backlog_limit is sufficient
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="audit_backlog_limit=8192"'
+  notify: update grub
+  when: suse15cis_rule_4_1_2_4
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_4_1_2_4
+
+- name: SCORED | 4.2.2.3 | PATCH | Ensure journald is configured to write logfiles to persistent disk
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^Storage='
+    line: 'Storage=persistent'
+    create: yes
+  when: suse15cis_rule_4_2_2_3
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_4.2.2.3
+
+- name: SCORED | 4.2.2.1 | PATCH | Ensure journald is configured to send logs to rsyslog
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^ForwardToSyslog='
+    line: 'ForwardToSyslog=yes'
+    create: yes
+  when: suse15cis_rule_4_2_2_1
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_4.2.2.1
+
+- name: SCORED | 3.3.1 | PATCH | Ensure IP forwarding is disabled (IPv4)
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.ip_forward'
+    line: 'net.ipv4.ip_forward = 0'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_1
+  tags:
+    - rule_3.3.1
+    - ip_forwarding
+
+- name: SCORED | 3.3.1 | PATCH | Ensure IP forwarding is disabled (IPv6)
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv6_sysctl.conf
+    regexp: '^net.ipv6.conf.all.forwarding'
+    line: 'net.ipv6.conf.all.forwarding = 0'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_1
+  tags:
+    - rule_3.3.1
+    - ipv6_forwarding
+
+- name: SCORED | 3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.tcp_syncookies'
+    line: 'net.ipv4.tcp_syncookies = 1'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_10
+  tags:
+    - rule_3.3.10
+    - tcp_syncookies
+
+- name: SCORED | 3.3.2 | PATCH | Ensure packet redirect sending is disabled
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.send_redirects'
+    line: 'net.ipv4.conf.all.send_redirects = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_2
+  tags:
+    - rule_3.3.2
+    - send_redirects
+
+- name: SCORED | 3.3.3 | PATCH | Ensure bogus ICMP responses are ignored
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.icmp_ignore_bogus_error_responses'
+    line: 'net.ipv4.icmp_ignore_bogus_error_responses = 1'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_3
+  tags:
+    - rule_3.3.3
+    - icmp_bogus
+
+- name: SCORED | 3.3.4 | PATCH | Ensure broadcast ICMP requests are ignored
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.icmp_echo_ignore_broadcasts'
+    line: 'net.ipv4.icmp_echo_ignore_broadcasts = 1'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_4
+  tags:
+    - rule_3.3.4
+    - icmp_broadcast
+
+- name: SCORED | 3.3.6 | PATCH | Ensure ICMP redirects are not accepted
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.accept_redirects'
+    line: 'net.ipv4.conf.all.accept_redirects = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_5
+  tags:
+    - rule_3.3.5
+    - icmp_redirects
+
+- name: SCORED | 3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.secure_redirects'
+    line: 'net.ipv4.conf.all.secure_redirects = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_6
+  tags:
+    - rule_3.3.6
+    - secure_icmp_redirects
+
+- name: SCORED | 3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.rp_filter'
+    line: 'net.ipv4.conf.all.rp_filter = 1'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_7
+  tags:
+    - rule_3.3.7
+    - rp_filter
+
+- name: SCORED | 3.3.8 | PATCH | Ensure source routed packets are not accepted
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.accept_source_route'
+    line: 'net.ipv4.conf.all.accept_source_route = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_8
+  tags:
+    - rule_3.3.8
+    - source_route
+
+- name: SCORED | 3.3.9 | PATCH | Ensure suspicious packets are logged
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: "net.ipv4.conf.all.log_martians = 1"
+    state: present
+      #notify: Restart Network  # Notify the handler without defining it here
+
+    #handlers:
+    #- name: Restart Network
+    #service:
+    # name: networking
+    # state: restarted
+- name: Ensure tipc kernel module is disabled
+  lineinfile:
+    path: /etc/modprobe.d/CIS.conf
+    regexp: '^install tipc'
+    line: 'install tipc /bin/false'
+    create: yes
+  when: suse15cis_rule_3_2_2
+  tags:
+    - rule_3.2.2
+    - tipc
+
+- name: Blacklist tipc kernel module
+  lineinfile:
+    path: /etc/modprobe.d/CIS.conf
+    regexp: '^blacklist tipc'
+    line: 'blacklist tipc'
+    create: yes
+  when: suse15cis_rule_3_2_2
+  tags:
+    - rule_3.2.2
+    - tipc
+
+- name: Remove tipc module from running kernel
+  command: modprobe -r tipc
+  ignore_errors: yes
+  when: suse15cis_rule_3_2_2
+  tags:
+    - rule_3.2.2
+    - tipc
+
+- name: Ensure rds kernel module is disabled
+  lineinfile:
+    path: /etc/modprobe.d/CIS.conf
+    regexp: '^install rds'
+    line: 'install rds /bin/false'
+    create: yes
+  when: suse15cis_rule_3_2_3
+  tags:
+    - rule_3.2.3
+    - rds
+
+- name: Blacklist rds kernel module
+  lineinfile:
+    path: /etc/modprobe.d/CIS.conf
+    regexp: '^blacklist rds'
+    line: 'blacklist rds'
+    create: yes
+  when: suse15cis_rule_3_2_3
+  tags:
+    - rule_3.2.3
+    - rds
+
+- name: Remove rds module from running kernel
+  command: modprobe -r rds
+  ignore_errors: yes
+  when: suse15cis_rule_3_2_3
+  tags:
+    - rule_3.2.3
+    - rds
+
+- name: Ensure sctp kernel module is disabled
+  lineinfile:
+    path: /etc/modprobe.d/CIS.conf
+    regexp: '^install sctp'
+    line: 'install sctp /bin/false'
+    create: yes
+  when: suse15cis_rule_3_2_4
+  tags:
+    - rule_3.2.4
+    - sctp
+
+- name: Blacklist sctp kernel module
+  lineinfile:
+    path: /etc/modprobe.d/CIS.conf
+    regexp: '^blacklist sctp'
+    line: 'blacklist sctp'
+    create: yes
+  when: suse15cis_rule_3_2_4
+  tags:
+    - rule_3.2.4
+    - sctp
+
+- name: Remove sctp module from running kernel
+  command: modprobe -r sctp
+  ignore_errors: yes
+  when: suse15cis_rule_3_2_4
+  tags:
+    - rule_3.2.4
+    - sctp
+
+
+- name: Ensure users must provide a password for sudo escalation
+  replace:
+    path: /etc/sudoers
+    regexp: '^(.*NOPASSWD:.*)$'
+    replace: '# \1'
+    backup: yes
+  when: suse15cis_rule_5_2_4
+  tags:
+    - rule_5.2.4
+    - sudo
+    - nopasswd
+
+- name: Ensure users must provide a password for sudo escalation in sudoers.d
+  replace:
+    path: "{{ item }}"
+    regexp: '^(.*NOPASSWD:.*)$'
+    replace: '# \1'
+    backup: yes
+  loop: "{{ query('fileglob', '/etc/sudoers.d/*') | reject('search', 'README') | list }}"
+      #with_fileglob:
+      #- /etc/sudoers.d/*
+  when: suse15cis_rule_5_2_4
+  tags:
+    - rule_5.2.4
+    - sudo
+    - nopasswd
+
+- name: Create the 'sugroup' group to restrict su command
+  group:
+    name: sugroup
+    state: present
+  when: suse15cis_rule_5_2_7
+  tags:
+    - rule_5.2.7
+    - su_restriction
+
+- name: Restrict su command to 'sugroup' in /etc/pam.d/su
+  lineinfile:
+    path: /etc/pam.d/su
+    line: 'auth required pam_wheel.so use_uid group=sugroup'
+    create: yes
+  when: suse15cis_rule_5_2_7
+  tags:
+    - rule_5.2.7
+    - su_restriction
+
+- name: Restrict su command to 'sugroup' in /etc/pam.d/su-l
+  lineinfile:
+    path: /etc/pam.d/su-l
+    line: 'auth required pam_wheel.so use_uid group=sugroup'
+    create: yes
+  when: suse15cis_rule_5_2_7
+  tags:
+    - rule_5.2.7
+    - su_restriction
+
+- name: Restrict gnomesu command if GNOME is installed
+  lineinfile:
+    path: /etc/pam.d/gnomesu-pam
+    line: 'auth required pam_wheel.so use_uid group=sugroup'
+    create: yes
+  when: suse15cis_rule_5_2_7 and ansible_facts['env']['XDG_CURRENT_DESKTOP'] is defined and 'GNOME' in ansible_facts['env']['XDG_CURRENT_DESKTOP']
+  tags:
+    - rule_5.2.7
+    - gnome
+    - su_restriction
+
+- name: Ensure password failed attempts lockout is configured
+  lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^deny\s*='
+    line: 'deny = 5'
+    create: yes
+  when: suse15cis_rule_5_3_2_1_1
+  tags:
+    - rule_5.3.2.1.1
+    - password_lockout
+
+- name: Ensure password unlock time is configured
+  lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^unlock_time\s*='
+    line: 'unlock_time = 900'
+    create: yes
+  when: suse15cis_rule_5_3_2_1_2
+  tags:
+    - rule_5.3.2.1.2
+    - unlock_time
+
+- name: Ensure password failed attempts lockout includes root account
+  lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^even_deny_root'
+    line: 'even_deny_root'
+    create: yes
+  when: suse15cis_rule_5_3_2_1_3
+  tags:
+    - rule_5.3.2.1.3
+    - root_lockout
+
+- name: Ensure root account has a minimum unlock time
+  replace:
+    path: /etc/security/faillock.conf
+    regexp: '^root_unlock_time\s*=\s*[0-9]+'
+    replace: 'root_unlock_time = 60'
+  when: suse15cis_rule_5_3_2_1_3
+  tags:
+    - rule_5.3.2.1.3
+    - root_unlock_time
+
+- name: Ensure password requires at least 2 different characters
+  lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^difok\s*='
+    line: 'difok = 2'
+    create: yes
+  when: suse15cis_rule_5_3_2_2_2
+  tags:
+    - rule_5.3.2.2.2
+    - password_quality
+
+- name: Ensure password does not allow more than 3 consecutive identical characters
+  lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^maxrepeat\s*='
+    line: 'maxrepeat = 3'
+    create: yes
+  when: suse15cis_rule_5_3_2_2_5
+  tags:
+    - rule_5.3.2.2.5
+    - password_quality
+
+- name: Ensure password does not allow more than 3 sequential characters
+  lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^maxsequence\s*='
+    line: 'maxsequence = 3'
+    create: yes
+  when: suse15cis_rule_5_3_2_2_6
+  tags:
+    - rule_5.3.2.2.6
+    - password_quality
+
+- name: Ensure password quality is enforced for the root user
+  lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^enforce_for_root'
+    line: 'enforce_for_root'
+    create: yes
+  when: suse15cis_rule_5_3_2_2_7
+  tags:
+    - rule_5.3.2.2.7
+    - password_quality
+    - root_password
+
+
+- name: Ensure password history remembers 24 previous passwords
+  command: pam-config -a --pwhistory --pwhistory-remember=24
+  when: suse15cis_rule_5_3_2_3_1
+  tags:
+    - rule_5.3.2.3.1
+    - password_history
+
+- name: Ensure password history is enforced for the root user
+  command: pam-config -a --pwhistory --pwhistory-enforce_for_root
+  when: suse15cis_rule_5_3_2_3_2
+  tags:
+    - rule_5.3.2.3.2
+    - password_history
+    - root_password
+
+- name: Ensure pam_pwhistory includes use_authtok
+  command: pam-config -a --pwhistory --pwhistory-use_authtok
+  when: suse15cis_rule_5_3_2_3_3
+  tags:
+    - rule_5.3.2.3.3
+    - password_history
+    - use_authtok
+
+
+- name: Ensure pam_unix does not include nullok
+  command: pam-config -d --unix --unix-nullok
+  when: suse15cis_rule_5_3_2_4_1
+  tags:
+    - rule_5.3.2.4.1
+    - pam_unix
+    - nullok_removal
+
+- name: Ensure pam_unix uses SHA512 for strong password hashing
+  command: pam-config -a --unix --unix-sha512
+  when: suse15cis_rule_5_3_2_4_3
+  tags:
+    - rule_5.3.2.4.3
+    - password_hashing
+    - sha512
+
+# Uncomment the below task if Yescrypt becomes available
+# - name: Ensure pam_unix uses Yescrypt for strong password hashing (if available)
+#   command: pam-config -a --unix --unix-yescrypt
+#   when: suse15cis_rule_5_3_2_4_3
+#   tags:
+#     - rule_5.3.2.4.3
+#     - password_hashing
+#     - yescrypt
+
+
+- name: Ensure PASS_MIN_DAYS is set in /etc/login.defs
+  lineinfile:
+    path: /etc/login.defs
+    regexp: '^PASS_MIN_DAYS\s*'
+    line: 'PASS_MIN_DAYS 1'
+    create: yes
+  when: suse15cis_rule_5_4_1_2
+  tags:
+    - rule_5.4.1.2
+    - password_policy
+    - login_defs
+
+- name: Set minimum password days for all users
+  shell: "awk -F: '($2 !~ /^\\*|^!/) && ($4 < 1) {system (\"chage --mindays 1 \" $1)}' /etc/shadow"
+  when: suse15cis_rule_5_4_1_2
+  tags:
+    - rule_5.4.1.2
+    - password_policy
+    - user_management
+
+- name: Ensure root account has a password set or is locked
+  command: usermod -L root
+  when: suse15cis_rule_5_4_2_4
+  tags:
+    - rule_5.4.2.4
+    - root_access
+    - account_lock
+
+- name: Ensure root user umask is set to 0027 or more restrictive in /root/.bash_profile
+  lineinfile:
+    path: /root/.bash_profile
+    regexp: '^umask\s'
+    line: 'umask 0027'
+    create: yes
+  when: suse15cis_rule_5_4_2_6
+  tags:
+    - rule_5.4.2.6
+    - umask
+    - root_security
+
+- name: Ensure root user umask is set to 0027 or more restrictive in /root/.bashrc
+  lineinfile:
+    path: /root/.bashrc
+    regexp: '^umask\s'
+    line: 'umask 0027'
+    create: yes
+  when: suse15cis_rule_5_4_2_6
+  tags:
+    - rule_5.4.2.6
+    - umask
+    - root_security
+
+- name: Ensure system accounts do not have a valid login shell
+  shell: |
+    awk -F: '($3<1000 && $1!="root" && $7!="/sbin/nologin" && $7!="/bin/false") {system("usermod -s /sbin/nologin " $1)}' /etc/passwd
+  when: suse15cis_rule_5_4_2_7
+  tags:
+    - rule_5.4.2.7
+    - system_accounts
+    - nologin
+
+- name: Ensure system-wide crypto policy disables SHA1 hash and signature support
+  lineinfile:
+    path: /etc/crypto-policies/policies/modules/NO_SHA1.pmod
+    line: "hash = -SHA1"
+    create: yes
+  when: suse15cis_rule_1_6_4
+  tags:
+    - rule_1.6.4
+
+- name: Ensure system-wide crypto policy disables MACs less than 128 bits
+  lineinfile:
+    path: /etc/crypto-policies/policies/modules/NO_WEAK_MACS.pmod
+    line: "mac = -ALL:+HMAC-SHA2-256:+HMAC-SHA2-512"
+    create: yes
+  when: suse15cis_rule_1_6_5
+  tags:
+    - rule_1.6.5
+
+- name: Ensure system-wide crypto policy disables chacha20-poly1305 for SSH
+  lineinfile:
+    path: /etc/crypto-policies/policies/modules/NO_CHACHA20.pmod
+    line: "cipher = -CHACHA20-POLY1305"
+    create: yes
+  when: suse15cis_rule_1_6_7
+  tags:
+    - rule_1.6.7
+
+- name: Get absolute path for audit tools
+  shell: "readlink -f /sbin"
+  register: audit_tools_path
+  changed_when: false
+
+- name: Ensure audit tools integrity is configured in AIDE
+  lineinfile:
+    path: /etc/aide.conf
+    line: "{{ audit_tools_path.stdout }}/{{ item }} p+i+n+u+g+s+b+acl+xattrs+sha512"
+    create: yes
+  loop:
+    - auditctl
+    - auditd
+    - ausearch
+    - aureport
+    - autrace
+    - augenrules
+  when: suse15cis_rule_6_1_3
+  tags:
+    - rule_6.1.3
+
+- name: Install systemd-journal-remote
+  package:
+    name: systemd-journal-remote
+    state: present
+  when: suse15cis_rule_6_2_2_1_1
+  tags:
+    - rule_6.2.2.1.1
+  ignore_errors: yes
+
+- name: Unmask, Enable and Start systemd-journal-upload
+  systemd:
+    name: systemd-journal-upload
+    enabled: yes
+    state: started
+    masked: no
+  when: suse15cis_rule_6_2_2_1_3
+  tags:
+    - rule_6.2.2.1.3
+  ignore_errors: yes
+
+- name: Ensure journald.conf.d directory exists
+  file:
+    path: /etc/systemd/journald.conf.d
+    state: directory
+    mode: "0755"
+
+- name: Configure journald compression
+  blockinfile:
+    path: /etc/systemd/journald.conf.d/60-journald.conf
+    create: yes
+    mode: "0644"
+    block: |
+      [Journal]
+      Compress=yes
+  when: suse15cis_rule_6_2_2_3
+  tags:
+    - rule_6.2.2.3
+
+- name: Configure journald storage
+  blockinfile:
+    path: /etc/systemd/journald.conf.d/60-journald.conf
+    create: yes
+    mode: "0644"
+    block: |
+      [Journal]
+      Storage=persistent
+  when: suse15cis_rule_6_2_2_4
+  tags:
+    - rule_6.2.2.4
+
+- name: Set correct ownership for log files
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    recurse: yes
+  with_fileglob:
+    - "/var/log/*"
+  when: suse15cis_rule_6_2_4_1
+  tags:
+    - rule_6.2.4.1
+
+- name: Set permissions for general log files
+  file:
+    path: "{{ item }}"
+    mode: "0640"
+  with_fileglob:
+    - "/var/log/*.log"
+    - "/var/log/messages"
+    - "/var/log/syslog"
+    - "/var/log/secure"
+  when: suse15cis_rule_6_2_4_1
+  tags:
+    - rule_6.2.4.1
+
+- name: Set permissions for sensitive logs
+  file:
+    path: "{{ item }}"
+    mode: "0600"
+  with_fileglob:
+    - "/var/log/btmp"
+    - "/var/log/wtmp"
+    - "/var/log/lastlog"
+  when: suse15cis_rule_6_2_4_1
+  tags:
+    - rule_6.2.4.1
+
+- name: Set permissions for journal logs
+  file:
+    path: "/var/log/journal"
+    mode: "0700"
+    owner: root
+    group: systemd-journal
+    recurse: yes
+  when: suse15cis_rule_6_2_4_1
+  tags:
+    - rule_6.2.4.1
+
+- name: Ensure audit=1 is set in GRUB_CMDLINE_LINUX
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="quiet audit=1"'
+    backrefs: yes
+  when: suse15cis_rule_6_3_1_2
+  tags:
+    - rule_6.3.1.2
+
+- name: Set audit log storage size
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^max_log_file ='
+    line: 'max_log_file = 100'  # Set to 100MB, modify as per policy
+    create: yes
+  when: suse15cis_rule_6_3_2_1
+  tags:
+    - rule_6.3.2.1
+
+- name: Ensure system disables on full audit logs
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^disk_full_action ='
+    line: 'disk_full_action = halt'  # System halts when disk is full
+    create: yes
+  when: suse15cis_rule_6_3_2_3
+  tags:
+    - rule_6.3.2.3
+
+- name: Ensure system handles audit log disk errors
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^disk_error_action ='
+    line: 'disk_error_action = halt'  # System halts on disk error
+    create: yes
+  when: suse15cis_rule_6_3_2_3
+  tags:
+    - rule_6.3.2.3
+
+- name: Define audit rules for chcon, setfacl, chacl, usermod, and kernel modules
+  copy:
+    dest: "/etc/audit/rules.d/50-audit.rules"
+    content: |
+        -a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+        -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+        -a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+        -a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=unset -k usermod
+        -a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=1000 -F auid!=unset -k kernel_modules
+        -a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=unset -k kernel_modules
+  when: suse15cis_rule_6_3_3_15 and suse15cis_rule_6_3_3_16 and suse15cis_rule_6_3_3_17 and suse15cis_rule_6_3_3_18 and suse15cis_rule_6_3_3_19
+  tags:
+    - rule_6.3.3.15
+    - rule_6.3.3.16
+    - rule_6.3.3.17
+    - rule_6.3.3.18
+    - rule_6.3.3.19
+
+- name: Ensure audit rule for actions as another user is configured
+  copy:
+    dest: "/etc/audit/rules.d/50-user_emulation.rules"
+    content: |
+      -a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation
+      -a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S execve -k user_emulation
+  when: suse15cis_rule_6_3_3_2
+  tags:
+    - rule_6.3.3.2
+
+- name: Ensure audit configuration is immutable
+  lineinfile:
+    path: "/etc/audit/rules.d/99-finalize.rules"
+    line: "-e 2"
+    create: yes
+  when: suse15cis_rule_6_3_3_20
+  tags:
+    - rule_6.3.3.20
+
+- name: Ensure system network modifications are collected
+  copy:
+    dest: "/etc/audit/rules.d/50-system_locale.rules"
+    content: |
+      -a always,exit -F arch=b64 -S sethostname,setdomainname -k system-locale
+      -a always,exit -F arch=b32 -S sethostname,setdomainname -k system-locale
+      -w /etc/issue -p wa -k system-locale
+      -w /etc/issue.net -p wa -k system-locale
+      -w /etc/hosts -p wa -k system-locale
+      -w /etc/hostname -p wa -k system-locale
+      -w /etc/sysconfig/network -p wa -k system-locale
+      -w /etc/sysconfig/network-scripts/ -p wa -k system-locale
+      -w /etc/NetworkManager -p wa -k system-locale
+  when: suse15cis_rule_6_3_3_5
+  tags:
+    - rule_6.3.3.5
+
+- name: Ensure privileged commands are collected
+  script: collect_privileged_commands.sh
+  when: suse15cis_rule_6_3_3_6
+  tags:
+    - rule_6.3.3.6
+
+- name: Ensure user/group modifications are collected
+  copy:
+    dest: "/etc/audit/rules.d/50-identity.rules"
+    content: |
+      -w /etc/group -p wa -k identity
+      -w /etc/passwd -p wa -k identity
+      -w /etc/gshadow -p wa -k identity
+      -w /etc/shadow -p wa -k identity
+      -w /etc/security/opasswd -p wa -k identity
+      -w /etc/nsswitch.conf -p wa -k identity
+      -w /etc/pam.conf -p wa -k identity
+      -w /etc/pam.d -p wa -k identity
+  when: suse15cis_rule_6_3_3_8
+  tags:
+    - rule_6.3.3.8
+
+- name: Change group ownership of audit log files to adm
+  shell: |
+    find $(dirname $(awk -F"=" '/^s*log_file=/ {print $2}' /etc/audit/auditd.conf | xargs)) -type f \( ! -group adm -a ! -group root \) -exec chgrp adm {} +
+  changed_when: false
+  when: suse15cis_rule_6_3_4_4
+  tags:
+    - rule_6.3.4.4
+
+- name: Ensure /var/log/audit directory is owned by adm group
+  file:
+    path: /var/log/audit
+    group: adm
+    state: directory
+  when: suse15cis_rule_6_3_4_4
+  tags:
+    - rule_6.3.4.4
+
+- name: Set log_group parameter in auditd.conf
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^#?\s*log_group='
+    line: 'log_group = adm'
+  when: suse15cis_rule_6_3_4_4
+  tags:
+    - rule_6.3.4.4
+
+- name: Set ownership of /etc/shadow to root
+  file:
+    path: /etc/shadow
+    owner: root
+    group: root
+  when: suse15cis_rule_7_1_5
+  tags:
+    - rule_7.1.5
+
+- name: Set permissions of /etc/shadow to 0000
+  file:
+    path: /etc/shadow
+    mode: '0000'
+  when: suse15cis_rule_7_1_5
+  tags:
+    - rule_7.1.5
+
+- name: Set ownership of /etc/shadow- to root
+  file:
+    path: /etc/shadow-
+    owner: root
+    group: root
+  when: suse15cis_rule_7_1_6
+  tags:
+    - rule_7.1.6
+
+- name: Set permissions of /etc/shadow- to 0000
+  file:
+    path: /etc/shadow-
+    mode: '0000'
+  when: suse15cis_rule_7_1_6
+  tags:
+    - rule_7.1.6
+
+- name: Ensure local interactive users have valid home directories
+  shell: |
+    for user in $(awk -F: '{if ($3 >= 1000 && $3 != 65534) print $1}' /etc/passwd); do
+      home=$(eval echo ~$user)
+      if [ ! -d "$home" ]; then
+        echo "Home directory missing for $user"
+      fi
+    done
+  register: missing_homes
+  changed_when: false
+  when: suse15cis_rule_7_2_8
+  tags:
+    - rule_7.2.8
+
+- name: Set proper ownership for local interactive user home directories
+  file:
+    path: "{{ item }}"
+    owner: "{{ item | basename }}"
+    group: "{{ item | basename }}"
+  with_items: "{{ missing_homes.stdout_lines }}"
+  when: missing_homes.stdout_lines | length > 0 and suse15cis_rule_7_2_8
+  tags:
+    - rule_7.2.8
+
+- name: Ensure home directories have restrictive permissions (750 or more secure)
+  file:
+    path: "{{ item }}"
+    mode: "0750"
+  with_items: "{{ missing_homes.stdout_lines }}"
+  when: missing_homes.stdout_lines | length > 0 and suse15cis_rule_7_2_8
+  tags:
+    - rule_7.2.8
+
+- name: Secure dot files inside user home directories
+  shell: |
+    find /home -type f -name '.*' -exec chmod go-wx {} +
+  when: suse15cis_rule_7_2_9
+  tags:
+    - rule_7.2.9

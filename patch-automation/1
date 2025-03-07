@@ -1,0 +1,213 @@
+- name: SCORED | 6.2.8 | Ensure users' dot files are not group or world writable
+  shell: find /home -name ".*" -type f -exec chmod go-w {} +
+  when:
+  - suse15cis_rule_6_2_8
+  tags:
+  - level1
+  - patch
+  - rule_6.2.8
+
+- name: SCORED | 6.2.6 | Ensure users' home directories permissions are 750 or more restrictive
+  shell: find /home -mindepth 1 -maxdepth 1 -type d -exec chmod 0750 {} +
+  when:
+  - suse15cis_rule_6_2_6
+  tags:
+  - level1
+  - patch
+  - rule_6.2.6
+
+- name: SCORED | 6.2.5 | Ensure all users' home directories exist
+  shell: |
+    awk -F: '($6 == "" || !system("test -d " $6)) {print $1, $6}' /etc/passwd | while read user dir; do 
+      mkdir -p "$dir" && chown "$user":"$user" "$dir"
+    done
+  when:
+  - suse15cis_rule_6_2_5
+  tags:
+  - level1
+  - patch
+  - rule_6.2.5
+
+- name: SCORED | 6.2.18 | Ensure shadow group is empty
+  shell: |
+    user=$(awk -F: '$1 == "shadow" {print $4}' /etc/group)
+    if [ -n "$user" ]; then gpasswd -d "$user" shadow; fi
+  when:
+  - suse15cis_rule_6_2_18
+  tags:
+  - level1
+  - patch
+  - rule_6.2.18
+
+- name: SCORED | 6.1.9 | Ensure permissions on /etc/gshadow are configured
+  file:
+    dest: /etc/gshadow
+    owner: root
+    group: root
+    mode: 0000
+  when:
+  - suse15cis_rule_6_1_9
+  tags:
+  - level1
+  - patch
+  - rule_6.1.9
+
+- name: SCORED | 6.1.8 | Ensure permissions on /etc/shadow are configured
+  file:
+    dest: /etc/shadow
+    owner: root
+    group: root
+    mode: 0000
+  when:
+  - suse15cis_rule_6_1_8
+  tags:
+  - level1
+  - patch
+  - rule_6.1.8
+
+- name: SCORED | 6.1.10 | Ensure permissions on /etc/gshadow- are configured
+  file:
+    dest: /etc/gshadow-
+    owner: root
+    group: root
+    mode: 0000
+  when:
+  - suse15cis_rule_6_1_10
+  tags:
+  - level1
+  - patch
+  - rule_6.1.10
+
+- name: SCORED | 5.4.5 | Ensure default group for root account is GID 0
+  user:
+    name: root
+    group: root
+  when:
+  - suse15cis_rule_5_4_5
+  tags:
+  - level1
+  - patch
+  - rule_5.4.5
+
+- name: SCORED | 5.4.4 | Ensure default user umask is 027 or more restrictive
+  lineinfile:
+    path: /etc/profile
+    regexp: '^umask'
+    line: 'umask 027'
+  when:
+  - suse15cis_rule_5_4_4
+  tags:
+  - level1
+  - patch
+  - rule_5.4.4
+
+- name: SCORED | 5.4.1.5 | Ensure all user accounts have passwords
+  shell: awk -F: '($2 == "!") {print $1}' /etc/shadow | while read user; do passwd -l "$user"; done
+  when:
+  - suse15cis_rule_5_4_1_5
+  tags:
+  - level1
+  - patch
+  - rule_5.4.1.5
+
+- name: SCORED | 5.4.1.4 | Ensure inactive password lock is 30 days or less
+  command: chage --inactive 30 root
+  when:
+  - suse15cis_rule_5_4_1_4
+  tags:
+  - level1
+  - patch
+  - rule_5.4.1.4
+
+- name: SCORED | 5.3.3 | Ensure password reuse is limited
+  pamd:
+    name: password-auth
+    module: pam_pwhistory.so
+    type: required
+    parameters: "remember=5"
+  when:
+  - suse15cis_rule_5_3_3
+  tags:
+  - level1
+  - patch
+  - rule_5.3.3
+
+- name: SCORED | 5.3.2 | Ensure lockout for failed password attempts is configured
+  pamd:
+    name: system-auth
+    module: pam_tally2.so
+    type: auth
+    parameters: "deny=5 unlock_time=900"
+  when:
+  - suse15cis_rule_5_3_2
+  tags:
+  - level1
+  - patch
+  - rule_5.3.2
+
+- name: SCORED | 4.2.1.5 | Ensure remote syslog-ng messages are logged
+  lineinfile:
+    path: /etc/syslog-ng/syslog-ng.conf
+    line: 'destination d_remote { tcp("192.168.1.1" port(514)); };'
+  when:
+  - suse15cis_rule_4_2_1_5
+  tags:
+  - level1
+  - patch
+  - rule_4.2.1.5
+
+- name: SCORED | 4.2.1.4 | Ensure permissions on all logfiles are configured
+  shell: find /var/log -type f -exec chmod 0640 {} +
+  when:
+  - suse15cis_rule_4_2_1_4
+  tags:
+  - level1
+  - patch
+  - rule_4.2.1.4
+
+- name: SCORED | 1.4.2 | Ensure authentication required for single user mode
+  replace:
+    path: /usr/lib/systemd/system/rescue.service
+    regexp: '^ExecStart=-/bin/sh -c /usr/sbin/sulogin; /usr/bin/systemctl --fail --no-block default'
+    replace: 'ExecStart=-/usr/sbin/sulogin'
+  when:
+  - suse15cis_rule_1_4_2
+  tags:
+  - level1
+  - patch
+  - rule_1.4.2
+
+- name: SCORED | 1.3.3 | Ensure prelink is disabled
+  package:
+    name: prelink
+    state: absent
+  when:
+  - suse15cis_rule_1_3_3
+  tags:
+  - level1
+  - patch
+  - rule_1.3.3
+
+- name: SCORED | 1.3.2 | Ensure core dumps are restricted
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: '* hard core 0'
+  when:
+  - suse15cis_rule_1_3_2
+  tags:
+  - level1
+  - patch
+  - rule_1.3.2
+
+- name: SCORED | 4.1.2.4 | Ensure audit logs are not automatically deleted
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^max_log_file_action'
+    line: 'max_log_file_action = keep_logs'
+  when:
+  - suse15cis_rule_4_1_2_4
+  tags:
+  - level1
+  - patch
+  - rule_4.1.2.4
+

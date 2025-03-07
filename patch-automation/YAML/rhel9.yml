@@ -1,0 +1,105 @@
+---
+- hosts: all
+  become: true
+  vars:
+      rhel9_activation_key: 'RHEL9'
+      rhel9_enabled_repos:
+      - codeready-builder-for-rhel-9-x86_64-rpms
+      - rhel-9-for-x86_64-appstream-rpms
+      - rhel-9-for-x86_64-baseos-rpms
+      rhel_security_updates: false
+      #      suse_activation_key: '114AF6A8C7824F84'
+  pre_tasks:
+  - block:
+
+    - name: Create Banner Template
+      template:
+          src: banner.txt.j2
+          dest: /etc/motd
+          owner: root
+          group: root
+          mode: '0644'
+
+    - name: Copy Banner to Target Systems
+      copy:
+          src: banner.txt.j2
+          dest: /etc/motd
+          owner: root
+          group: root
+          mode: '0644'
+
+
+    - name: Copy Banner to Target Systems
+      copy:
+        src: banner.txt.j2
+        dest: /etc/issue.net
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy Banner to Target Systems
+      copy:
+        src: banner.txt.j2
+        dest: /etc/issue
+        owner: root
+        group: root
+        mode: '0644'
+
+
+
+    - name: Fetching OS name and version details
+      shell: cat /etc/os-release
+      register: release
+    - debug:
+        msg: "{{ item }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'NAME'"
+    - name: Registering OS name
+      set_fact:
+        OS_name: "{{ item.split('=')[1] }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'NAME'"
+    - name: Resgistering OS version
+      set_fact:
+        OS_version: "{{ item.split('=')[1] }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'VERSION'"
+    - name: If RHEL 9 server
+      debug:
+        msg: "RHEL 9 server"
+    - import_role:
+        name: RHEL9-CIS
+      when:
+      - "'Red Hat' in OS_name"
+      - "'9' in OS_version.split('.')[0]"
+    - name: katello package
+      block:
+      - name: download katello package RPM
+        get_url:
+          url: 'http://satellite1.theserverindia.com/pub/katello-ca-consumer-latest.noarch.rpm'
+          dest: /tmp/katello.latest.rpm
+      - name: remove katello package
+        yum:
+          name: katello-ca-consumer-satellite1.theserverindia.com
+          state: absent
+      - name: update katello package
+        shell: "rpm -Uhv /tmp/katello.latest.rpm && rm /tmp/katello.latest.rpm"
+      when: "ansible_distribution == 'RedHat'"
+      tags:
+      - pathing
+      - name: subscription
+        tags:
+        - rhel_subscription
+      - name: subscripbe to RHEL 9
+        redhat_subscription:
+          activationkey: '{{ rhel9_activation_key }}'
+          org_id: '{{ organization_id }}'
+          state: present
+          force_register: true
+          auto_attach: true
+        when: "'9' in OS_version.split('.')[0]"
+      tags:
+      - rhel_subscription
+  roles:
+  - { role: RHEL9-CIS, when: "'9' in OS_version.split('.')[0]"}
+

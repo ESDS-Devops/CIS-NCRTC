@@ -1,0 +1,34 @@
+---
+- hosts: all
+  become: true
+  vars:
+      # RHEL vars
+      organization_id: 'Default_Organization'
+      suse_activation_key: '114AF6A8C7824F84'
+  pre_tasks:
+  - block:
+    - name: Fetching OS name and version details
+      shell: cat /etc/os-release
+      register: release
+    - debug:
+        msg: "{{ item }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'NAME'"
+    - name: Registering OS name
+      set_fact:
+        OS_name: "{{ item.split('=')[1] }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'NAME'"
+    - name: Resgistering OS version
+      set_fact:
+        OS_version: "{{ item.split('=')[1] }}"
+      with_items: "{{ release.stdout_lines }}"
+      when: "item.split('=')[0] == 'VERSION'"
+### SUSE subscription
+    - name: subscribe to SUSE/SLES
+      shell: "SUSEConnect -r {{ suse_activation_key }}"
+      ignore_errors: true
+        #when: "('SUSE' in ansible_distribution or 'SLES' in ansible_distribution) and suse_subscription.rc!=0"
+      when: "'SLES' in OS_name"
+  roles:
+  - {role: SUSE15_CIS, when: "'SUSE' in ansible_distribution or 'SLES' in ansible_distribution"}

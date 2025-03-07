@@ -1,0 +1,258 @@
+1.1.1.1 Ensure mounting of cramfs filesystems is disabled
+1.1.1.2 Ensure mounting of freevxfs filesystems is disabled
+1.1.1.3 Ensure mounting of jffs2 filesystems is disabled
+1.1.1.4 Ensure mounting of hfs filesystems is disabled
+1.1.1.5 Ensure mounting of hfsplus filesystems is disabled
+1.1.1.6 Ensure mounting of squashfs filesystems is disabled
+1.1.1.7 Ensure mounting of udf filesystems is disabled
+1.1.10 Disable USB Storage
+1.1.2.1 Ensure /tmp is a separate partition
+1.1.8.1 Ensure nodev option set on /dev/shm partition
+1.1.8.3 Ensure nosuid option set on /dev/shm partition
+1.1.9 Disable Automounting
+1.2.1 Ensure AIDE is installed
+1.2.2 Ensure filesystem integrity is regularly checked
+1.3.1 Ensure updates, patches, and additional security software are installed
+1.3.2 Ensure package manager repositories are configured
+1.3.3 Ensure GPG keys are configured
+1.4.2 Ensure permissions on bootloader config are configured
+1.4.3 Ensure authentication required for single user mode
+1.5.1 Ensure prelink is not installed
+1.5.2 Ensure address space layout randomization (ASLR) is enabled
+1.5.3 Ensure ptrace_scope is restricted
+1.5.4 Ensure Automatic Error Reporting is not enabled
+1.5.5 Ensure core dumps are restricted
+1.6.1.1 Ensure AppArmor is installed
+1.7.1 Ensure message of the day is configured properly
+1.7.2 Ensure local login warning banner is configured properly
+1.7.3 Ensure remote login warning banner is configured properly
+1.7.4 Ensure permissions on /etc/motd are configured
+1.7.5 Ensure permissions on /etc/issue are configured
+1.7.6 Ensure permissions on /etc/issue.net are configured
+1.8.1 Ensure GNOME Display Manager is removed
+1.8.10 Ensure XDCMP is not enabled
+1.8.2 Ensure GDM login banner is configured
+1.8.3 Ensure GDM disable-user-list option is enabled
+1.8.4 Ensure GDM screen locks when the user is idle
+1.8.5 Ensure GDM screen locks cannot be overridden
+1.8.6 Ensure GDM automatic mounting of removable media is disabled
+1.8.7 Ensure GDM disabling automatic mounting of removable media is not overridden
+1.8.8 Ensure GDM autorun-never is enabled
+1.8.9 Ensure GDM autorun-never is not overridden
+2.1.1.1 Ensure a single time synchronization daemon is in use
+2.1.2.1 Ensure chrony is configured with authorized timeserver
+2.1.2.2 Ensure chrony is running as user _chrony
+2.1.2.3 Ensure chrony is enabled and running
+2.1.3.1 Ensure systemd-timesyncd configured with authorized timeserver
+2.1.3.2 Ensure systemd-timesyncd is enabled and running
+2.1.4.1 Ensure ntp access control is configured
+2.1.4.2 Ensure ntp is configured with authorized timeserver
+2.1.4.3 Ensure ntp is running as user ntp
+2.1.4.4 Ensure ntp is enabled and running
+2.2.1 Ensure X Window System is not installed
+2.2.10 Ensure IMAP and POP3 server are not installed
+2.2.11 Ensure Samba is not installed
+2.2.12 Ensure HTTP Proxy Server is not installed
+2.2.13 Ensure SNMP Server is not installed
+2.2.14 Ensure NIS Server is not installed
+2.2.15 Ensure dnsmasq is not installed
+2.2.16 Ensure mail transfer agent is configured for local-only mode
+2.2.17 Ensure rsync service is either not installed or is masked
+2.2.2 Ensure Avahi Server is not installed
+2.2.3 Ensure CUPS is not installed
+2.2.4 Ensure DHCP Server is not installed
+2.2.5 Ensure LDAP server is not installed
+2.2.6 Ensure NFS is not installed
+2.2.7 Ensure DNS Server is not installed
+2.2.8 Ensure FTP Server is not installed
+2.2.9 Ensure HTTP server is not installed
+2.3.1 Ensure NIS Client is not installed
+2.3.2 Ensure rsh client is not installed
+2.3.3 Ensure talk client is not installed
+2.3.5 Ensure LDAP client is not installed
+2.3.6 Ensure  RPC is not installed
+2.4 Ensure nonessential services are removed or masked
+3.1.1 Ensure IPv6 status is identified
+3.1.2 Ensure wireless interfaces are disabled
+3.1.3 Ensure bluetooth is disabled
+3.1.4 Ensure DCCP is disabled
+3.1.5 Ensure SCTP is disabled
+3.1.6 Ensure RDS is disabled
+3.1.7 Ensure TIPC is disabled
+3.2.1 Ensure packet redirect sending is disabled
+3.2.2 Ensure IP forwarding is disabled
+3.3.1 Ensure source routed packets are not accepted
+3.3.2 Ensure ICMP redirects are not accepted
+3.3.3 Ensure secure ICMP redirects are not accepted
+3.3.4 Ensure suspicious packets are logged
+3.3.5 Ensure broadcast ICMP requests are ignored
+3.3.6 Ensure bogus ICMP responses are ignored
+3.3.7 Ensure Reverse Path Filtering is enabled
+3.3.8 Ensure TCP SYN Cookies is enabled
+3.3.9 Ensure IPv6 router advertisements are not accepted
+3.4.1.1 Ensure ufw is installed
+3.4.1.2 Ensure iptables-persistent is not installed with ufw
+3.4.1.3 Ensure ufw service is enabled
+3.4.1.4 Ensure ufw loopback traffic is configured
+3.4.1.5 Ensure ufw outbound connections are configured
+3.4.1.6 Ensure ufw firewall rules exist for all open ports
+3.4.1.7 Ensure ufw default deny firewall policy
+3.4.2.1 Ensure nftables is installed
+3.4.2.10 Ensure nftables rules are permanent
+3.4.2.2 Ensure ufw is uninstalled or disabled with nftables
+3.4.2.3 Ensure iptables are flushed with nftables
+3.4.2.4 Ensure a nftables table exists
+3.4.2.5 Ensure nftables base chains exist
+3.4.2.6 Ensure nftables loopback traffic is configured
+3.4.2.7 Ensure nftables outbound and established connections are configured
+3.4.2.8 Ensure nftables default deny firewall policy
+3.4.2.9 Ensure nftables service is enabled
+3.4.3.1.1 Ensure iptables packages are installed
+3.4.3.1.2 Ensure nftables is not installed with iptables
+3.4.3.1.3 Ensure ufw is uninstalled or disabled with iptables
+3.4.3.2.1 Ensure iptables default deny firewall policy
+3.4.3.2.2 Ensure iptables loopback traffic is configured
+3.4.3.2.3 Ensure iptables outbound and established connections are configured
+3.4.3.2.4 Ensure iptables firewall rules exist for all open ports
+3.4.3.3.1 Ensure ip6tables default deny firewall policy
+3.4.3.3.2 Ensure ip6tables loopback traffic is configured
+3.4.3.3.3 Ensure ip6tables outbound and established connections are configured
+3.4.3.3.4 Ensure ip6tables firewall rules exist for all open ports
+4.1.1 Ensure cron daemon is enabled and active
+4.1.2 Ensure permissions on /etc/crontab are configured
+4.1.3 Ensure permissions on /etc/cron.hourly are configured
+4.1.4 Ensure permissions on /etc/cron.daily are configured
+4.1.5 Ensure permissions on /etc/cron.weekly are configured
+4.1.6 Ensure permissions on /etc/cron.monthly are configured
+4.1.7 Ensure permissions on /etc/cron.d are configured
+4.1.8 Ensure cron is restricted to authorized users
+4.1.9 Ensure at is restricted to authorized users
+4.2.1 Ensure permissions on /etc/ssh/sshd_config are configured
+4.2.10 Ensure SSH PermitUserEnvironment is disabled
+4.2.11 Ensure SSH IgnoreRhosts is enabled
+4.2.12 Ensure SSH X11 forwarding is disabled
+4.2.13 Ensure only strong Ciphers are used
+4.2.14 Ensure only strong MAC algorithms are used
+4.2.15 Ensure only strong Key Exchange algorithms are used
+4.2.16 Ensure SSH AllowTcpForwarding is disabled
+4.2.17 Ensure SSH warning banner is configured
+4.2.18 Ensure SSH MaxAuthTries is set to 4 or less
+4.2.19 Ensure SSH MaxStartups is configured
+4.2.2 Ensure permissions on SSH private host key files are configured
+4.2.20 Ensure SSH LoginGraceTime is set to one minute or less
+4.2.21 Ensure SSH MaxSessions is set to 10 or less
+4.2.22 Ensure SSH Idle Timeout Interval is configured
+4.2.3 Ensure permissions on SSH public host key files are configured
+4.2.4 Ensure SSH access is limited
+4.2.5 Ensure SSH LogLevel is appropriate
+4.2.6 Ensure SSH PAM is enabled
+4.2.7 Ensure SSH root login is disabled
+4.2.8 Ensure SSH HostbasedAuthentication is disabled
+4.2.9 Ensure SSH PermitEmptyPasswords is disabled
+4.3.1 Ensure sudo is installed
+4.3.2 Ensure sudo commands use pty
+4.3.3 Ensure sudo log file exists
+4.3.4 Ensure users must provide password for privilege escalation
+4.3.5 Ensure re-authentication for privilege escalation is not disabled globally
+4.3.6 Ensure sudo authentication timeout is configured correctly
+4.3.7 Ensure access to the su command is restricted
+4.4.1 Ensure password creation requirements are configured
+4.4.2 Ensure lockout for failed password attempts is configured
+4.4.3 Ensure password reuse is limited
+4.4.4 Ensure strong password hashing algorithm is configured
+4.4.5 Ensure all current passwords uses the configured hashing algorithm
+4.5.1.1 Ensure minimum days between password changes is  configured
+4.5.1.2 Ensure password expiration is 365 days or less
+4.5.1.3 Ensure password expiration warning days is 7 or more
+4.5.1.4 Ensure inactive password lock is 30 days or less
+4.5.1.5 Ensure all users last password change date is in the past
+4.5.1.6 Ensure the number of changed characters in a new password is configured
+4.5.1.7 Ensure preventing the use of dictionary words for passwords is configured
+4.5.2 Ensure system accounts are secured
+4.5.3 Ensure default group for the root account is GID 0
+4.5.4 Ensure default user umask is 027 or more restrictive
+4.5.5 Ensure default user shell timeout is configured
+4.5.6 Ensure nologin is not listed in /etc/shells
+4.5.7 Ensure maximum number of same consecutive characters in a password is configured
+5.1.1.1.1 Ensure systemd-journal-remote is installed
+5.1.1.1.2 Ensure systemd-journal-remote is configured
+5.1.1.1.3 Ensure systemd-journal-remote is enabled
+5.1.1.1.4 Ensure journald is not configured to receive logs from a remote client
+5.1.1.2 Ensure journald service is enabled
+5.1.1.3 Ensure journald is configured to compress large log files
+5.1.1.4 Ensure journald is configured to write logfiles to persistent disk
+5.1.1.5 Ensure journald is not configured to send logs to rsyslog
+5.1.1.6 Ensure journald log rotation is configured per site policy
+5.1.1.7 Ensure journald default file permissions configured
+5.1.2.1 Ensure rsyslog is installed
+5.1.2.2 Ensure rsyslog service is enabled
+5.1.2.3 Ensure journald is configured to send logs to rsyslog
+5.1.2.4 Ensure rsyslog default file permissions are configured
+5.1.2.5 Ensure logging is configured
+5.1.2.6 Ensure rsyslog is configured to send logs to a remote log host
+5.1.2.7 Ensure rsyslog is not configured to receive logs from a remote client
+5.1.3 Ensure all logfiles have appropriate access configured
+5.2.1.1 Ensure auditd is installed
+5.2.1.2 Ensure auditd service is enabled and active
+5.2.1.3 Ensure auditing for processes that start prior to auditd is enabled
+5.2.1.4 Ensure audit_backlog_limit is sufficient
+5.2.2.1 Ensure audit log storage size is configured
+5.2.2.2 Ensure audit logs are not automatically deleted
+5.2.2.3 Ensure system is disabled when audit logs are full
+5.2.3.1 Ensure changes to system administration scope (sudoers) is collected
+5.2.3.10 Ensure successful file system mounts are collected
+5.2.3.11 Ensure session initiation information is collected
+5.2.3.12 Ensure login and logout events are collected
+5.2.3.13 Ensure file deletion events by users are collected
+5.2.3.14 Ensure events that modify the system's Mandatory Access Controls are collected
+5.2.3.15 Ensure successful and unsuccessful attempts to use the chcon command are recorded
+5.2.3.16 Ensure successful and unsuccessful attempts to use the setfacl command are recorded
+5.2.3.17 Ensure successful and unsuccessful attempts to use the chacl command are recorded
+5.2.3.18 Ensure successful and unsuccessful attempts to use the usermod command are recorded
+5.2.3.19 Ensure kernel module loading unloading and modification is collected
+5.2.3.2 Ensure actions as another user are always logged
+5.2.3.20 Ensure the audit configuration is immutable
+5.2.3.21 Ensure the running and on disk configuration is the same
+5.2.3.3 Ensure events that modify the sudo log file are collected
+5.2.3.4 Ensure events that modify date and time information are collected
+5.2.3.5 Ensure events that modify the system's network environment are collected
+5.2.3.6 Ensure use of privileged commands are collected
+5.2.3.7 Ensure unsuccessful file access attempts are collected
+5.2.3.8 Ensure events that modify user/group information are collected
+5.2.3.9 Ensure discretionary access control permission modification events are collected
+5.2.4.1 Ensure audit log files are mode 0640 or less permissive
+5.2.4.10 Ensure audit tools belong to group root
+5.2.4.11 Ensure cryptographic mechanisms are used to protect the integrity of audit tools
+5.2.4.2 Ensure only authorized users own audit log files
+5.2.4.3 Ensure only authorized groups are assigned ownership of audit log files
+5.2.4.4 Ensure the audit log directory is 0750 or more restrictive
+5.2.4.5 Ensure audit configuration files are 640 or more restrictive
+5.2.4.6 Ensure audit configuration files are owned by root
+5.2.4.7 Ensure audit configuration files belong to group root
+5.2.4.8 Ensure audit tools are 755 or more restrictive
+5.2.4.9 Ensure audit tools are owned by root
+6.1.1 Ensure permissions on /etc/passwd are configured
+6.1.10 Ensure permissions on /etc/opasswd are configured
+6.1.11 Ensure world writable files and directories are secured
+6.1.12 Ensure no unowned or ungrouped files or directories exist
+6.1.13 Ensure SUID and SGID files are reviewed
+6.1.2 Ensure permissions on /etc/passwd- are configured
+6.1.3 Ensure permissions on /etc/group are configured
+6.1.4 Ensure permissions on /etc/group- are configured
+6.1.5 Ensure permissions on /etc/shadow are configured
+6.1.6 Ensure permissions on /etc/shadow- are configured
+6.1.7 Ensure permissions on /etc/gshadow are configured
+6.1.8 Ensure permissions on /etc/gshadow- are configured
+6.1.9 Ensure permissions on /etc/shells are configured
+6.2.1 Ensure accounts in /etc/passwd use shadowed passwords
+6.2.10 Ensure root is the only UID 0 account
+6.2.11 Ensure local interactive user home directories are configured
+6.2.12 Ensure local interactive user dot files access is configured
+6.2.2 Ensure /etc/shadow password fields are not empty
+6.2.3 Ensure all groups in /etc/passwd exist in /etc/group
+6.2.4 Ensure shadow group is empty
+6.2.5 Ensure no duplicate UIDs exist
+6.2.6 Ensure no duplicate GIDs exist
+6.2.7 Ensure no duplicate user names exist
+6.2.8 Ensure no duplicate group names exist
+6.2.9 Ensure root PATH Integrity

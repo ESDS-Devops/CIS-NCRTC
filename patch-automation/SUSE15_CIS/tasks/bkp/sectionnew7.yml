@@ -1,0 +1,176 @@
+# Ansible Playbook for SUSE Linux CIS Hardening
+
+- name: SCORED | 6.2.8 | PATCH | Ensure users' dot files are not group or world writable
+  shell: "find /home -type f -name '.*' -perm /go+w -exec chmod go-w {} +"
+  when: suse15cis_rule_6_2_8
+  tags:
+    - level1
+    - patch
+    - rule_6_2_8
+
+- name: SCORED | 6.2.6 | PATCH | Ensure users' home directories permissions are 750 or more restrictive
+  shell: "find /home -mindepth 1 -maxdepth 1 -type d -exec chmod 750 {} +"
+  when: suse15cis_rule_6_2_6
+  tags:
+    - level1
+    - patch
+    - rule_6_2_6
+
+- name: SCORED | 6.2.5 | PATCH | Ensure all users' home directories exist
+  shell: "awk -F: '($3 >= 1000 && $7 != "/sbin/nologin") {print $1 " " $6}' /etc/passwd | while read user dir; do [ ! -d "$dir" ] && mkdir -p "$dir" && chown "$user":"$user" "$dir"; done"
+  when: suse15cis_rule_6_2_5
+  tags:
+    - level1
+    - patch
+    - rule_6_2_5
+
+- name: SCORED | 6.2.18 | PATCH | Ensure shadow group is empty
+  shell: "for user in $(awk -F: '$4 == "42" {print $1}' /etc/passwd); do usermod -g users $user; done"
+  when: suse15cis_rule_6_2_18
+  tags:
+    - level1
+    - patch
+    - rule_6_2_18
+
+- name: SCORED | 6.1.9 | PATCH | Ensure no unowned files or directories exist
+  shell: "find / -xdev -nouser -exec chown root:root {} +"
+  when: suse15cis_rule_6_1_9
+  tags:
+    - level1
+    - patch
+    - rule_6_1_9
+
+- name: SCORED | 6.1.8 | PATCH | Ensure no world writable files exist
+  shell: "find / -xdev -type f -perm -002 -exec chmod o-w {} +"
+  when: suse15cis_rule_6_1_8
+  tags:
+    - level1
+    - patch
+    - rule_6_1_8
+
+- name: SCORED | 6.1.10 | PATCH | Ensure no ungrouped files or directories exist
+  shell: "find / -xdev -nogroup -exec chown root:root {} +"
+  when: suse15cis_rule_6_1_10
+  tags:
+    - level1
+    - patch
+    - rule_6_1_10
+
+- name: SCORED | 5.4.5 | PATCH | Ensure default user umask is configured
+  lineinfile:
+    path: /etc/login.defs
+    regexp: '^UMASK'
+    line: 'UMASK 027'
+  when: suse15cis_rule_5_4_5
+  tags:
+    - level1
+    - patch
+    - rule_5_4_5
+
+- name: SCORED | 5.4.4 | PATCH | Ensure default user shell timeout is configured
+  lineinfile:
+    path: /etc/profile.d/tmout.sh
+    line: 'readonly TMOUT=900; export TMOUT'
+    create: yes
+  when: suse15cis_rule_5_4_4
+  tags:
+    - level1
+    - patch
+    - rule_5_4_4
+
+- name: SCORED | 5.4.1.5 | PATCH | Ensure inactive password lock is 30 days or less
+  shell: "chage --inactive 30 $(awk -F: '($3 >= 1000) {print $1}' /etc/passwd)"
+  when: suse15cis_rule_5_4_1_5
+  tags:
+    - level1
+    - patch
+    - rule_5_4_1_5
+
+- name: SCORED | 5.3.3 | PATCH | Ensure password reuse is limited
+  lineinfile:
+    path: /etc/pam.d/common-password
+    line: 'password required pam_pwhistory.so remember=5'
+  when: suse15cis_rule_5_3_3
+  tags:
+    - level1
+    - patch
+    - rule_5_3_3
+
+- name: SCORED | 5.3.2 | PATCH | Ensure lockout for failed password attempts is configured
+  lineinfile:
+    path: /etc/pam.d/login
+    insertbefore: 'auth required pam_env.so'
+    line: 'auth required pam_tally2.so deny=5 onerr=fail unlock_time=900'
+  when: suse15cis_rule_5_3_2
+  tags:
+    - level1
+    - patch
+    - rule_5_3_2
+
+- name: SCORED | 4.2.1.5 | PATCH | Ensure rsyslog is configured to send logs to a remote log host
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.* '
+  notify: restart rsyslog
+  when: suse15cis_rule_4_2_1_5
+  tags:
+    - level1
+    - patch
+    - rule_4_2_1_5
+
+- name: SCORED | 4.2.1.4 | PATCH | Ensure logging is configured
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.emerg :omusrmsg:*'
+  notify: restart rsyslog
+  when: suse15cis_rule_4_2_1_4
+  tags:
+    - level1
+    - patch
+    - rule_4_2_1_4
+
+- name: SCORED | 2.3.4 | PATCH | Ensure telnet client is not installed
+  package:
+    name: telnet
+    state: absent
+  when: suse15cis_rule_2_3_4
+  tags:
+    - level1
+    - patch
+    - rule_2_3_4
+
+- name: SCORED | 1.3.3 | PATCH | Ensure sudo log file exists
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults logfile="/var/log/sudo.log"'
+    validate: 'visudo -cf %s'
+  when: suse15cis_rule_1_3_3
+  tags:
+    - level1
+    - patch
+    - rule_1_3_3
+
+- name: SCORED | 1.3.2 | PATCH | Ensure sudo commands use pty
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults use_pty'
+    validate: 'visudo -cf %s'
+  when: suse15cis_rule_1_3_2
+  tags:
+    - level1
+    - patch
+    - rule_1_3_2
+	
+- name: SCORED | 4.1.2.4 | PATCH | Ensure audit_backlog_limit is sufficient
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="audit_backlog_limit=8192"'
+  notify: update grub
+  when: suse15cis_rule_4_1_2_4
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_4_1_2_4
+

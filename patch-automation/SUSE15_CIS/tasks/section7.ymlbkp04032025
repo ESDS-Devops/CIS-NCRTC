@@ -1,0 +1,346 @@
+# Ansible Playbook for SUSE Linux CIS Hardening
+
+- name: SCORED | 6.2.8 | PATCH | Ensure users' dot files are not group or world writable
+  shell: "find /home -type f -name '.*' -perm /go+w -exec chmod go-w {} +"
+  when: suse15cis_rule_6_2_8
+  tags:
+    - level1
+    - patch
+    - rule_6_2_8
+
+- name: SCORED | 6.2.6 | PATCH | Ensure users' home directories permissions are 750 or more restrictive
+  shell: "find /home -mindepth 1 -maxdepth 1 -type d -exec chmod 750 {} +"
+  when: suse15cis_rule_6_2_6
+  tags:
+    - level1
+    - patch
+    - rule_6_2_6
+
+- name: SCORED | 6.2.5 | PATCH | Ensure all users' home directories exist
+  shell: |
+    awk -F: '($3 >= 1000 && $7 != "/sbin/nologin") {print $1 " " $6}' /etc/passwd |
+    while read user dir; do
+      if [ -d "$dir" ]; then
+        echo "Directory $dir already exists for user $user, skipping..."
+      else
+        mkdir -p "$dir" && chown "$user":"$user" "$dir" || echo "Failed to create $dir for $user"
+      fi
+    done
+  when: suse15cis_rule_6_2_5
+  tags:
+    - level1
+    - patch
+    - rule_6_2_5
+
+- name: SCORED | 6.2.18 | PATCH | Ensure shadow group is empty
+  shell: |
+    for user in $(awk -F: '$4 == "42" {print $1}' /etc/passwd); do usermod -g users $user; done
+  when: suse15cis_rule_6_2_18
+  tags:
+    - level1
+    - patch
+    - rule_6_2_18
+
+- name: SCORED | 6.1.9 | PATCH | Ensure no unowned files or directories exist
+  shell: "find / -xdev -nouser -exec chown root:root {} +"
+  when: suse15cis_rule_6_1_9
+  tags:
+    - level1
+    - patch
+    - rule_6_1_9
+
+- name: SCORED | 6.1.8 | PATCH | Ensure no world writable files exist
+  shell: "find / -xdev -type f -perm -002 -exec chmod o-w {} +"
+  when: suse15cis_rule_6_1_8
+  tags:
+    - level1
+    - patch
+    - rule_6_1_8
+
+- name: SCORED | 6.1.10 | PATCH | Ensure no ungrouped files or directories exist
+  shell: "find / -xdev -nogroup -exec chown root:root {} +"
+  when: suse15cis_rule_6_1_10
+  tags:
+    - level1
+    - patch
+    - rule_6_1_10
+
+- name: SCORED | 5.4.5 | PATCH | Ensure default user umask is configured
+  lineinfile:
+    path: /etc/login.defs
+    regexp: '^UMASK'
+    line: 'UMASK 027'
+  when: suse15cis_rule_5_4_5
+  tags:
+    - level1
+    - patch
+    - rule_5_4_5
+
+- name: SCORED | 5.4.4 | PATCH | Ensure default user shell timeout is configured
+  lineinfile:
+    path: /etc/profile.d/tmout.sh
+    line: 'readonly TMOUT=900; export TMOUT'
+    create: yes
+  when: suse15cis_rule_5_4_4
+  tags:
+    - level1
+    - patch
+    - rule_5_4_4
+
+- name: SCORED | 5.4.1.5 | PATCH | Ensure inactive password lock is 30 days or less
+  shell: |
+    for user in $(awk -F: '($3 >= 1000 && $7 != "/sbin/nologin") {print $1}' /etc/passwd); do
+      chage --inactive 30 "$user" || echo "Failed to set inactive lock for $user"
+    done
+  when: suse15cis_rule_5_4_1_5
+  tags:
+    - level1
+    - patch
+    - rule_5_4_1_5
+
+- name: SCORED | 5.3.3 | PATCH | Ensure password reuse is limited
+  lineinfile:
+    path: /etc/pam.d/common-password
+    line: 'password required pam_pwhistory.so remember=5'
+  when: suse15cis_rule_5_3_3
+  tags:
+    - level1
+    - patch
+    - rule_5_3_3
+
+- name: SCORED | 5.3.2 | PATCH | Ensure lockout for failed password attempts is configured
+  lineinfile:
+    path: /etc/pam.d/common-account
+    insertbefore: 'auth required pam_env.so'
+    line: 'auth required pam_tally2.so deny=5 onerr=fail unlock_time=900'
+  when: suse15cis_rule_5_3_2
+  tags:
+    - level1
+    - patch
+    - rule_5_3_2
+
+- name: SCORED | 4.2.1.5 | PATCH | Ensure rsyslog is configured to send logs to a remote log host
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.* '
+  notify: restart rsyslog
+  when: suse15cis_rule_4_2_1_5
+  tags:
+    - level1
+    - patch
+    - rule_4_2_1_5
+
+- name: SCORED | 4.2.1.4 | PATCH | Ensure logging is configured
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.emerg :omusrmsg:*'
+  notify: restart rsyslog
+  when: suse15cis_rule_4_2_1_4
+  tags:
+    - level1
+    - patch
+    - rule_4_2_1_4
+
+- name: SCORED | 2.3.4 | PATCH | Ensure telnet client is not installed
+  package:
+    name: telnet
+    state: absent
+  when: suse15cis_rule_2_3_4
+  tags:
+    - level1
+    - patch
+    - rule_2_3_4
+
+- name: SCORED | 1.3.3 | PATCH | Ensure sudo log file exists
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults logfile="/var/log/sudo.log"'
+    validate: 'visudo -cf %s'
+  when: suse15cis_rule_1_3_3
+  tags:
+    - level1
+    - patch
+    - rule_1_3_3
+
+- name: SCORED | 1.3.2 | PATCH | Ensure sudo commands use pty
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults use_pty'
+    validate: 'visudo -cf %s'
+  when: suse15cis_rule_1_3_2
+  tags:
+    - level1
+    - patch
+    - rule_1_3_2
+    
+- name: SCORED | 4.1.2.4 | PATCH | Ensure audit_backlog_limit is sufficient
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="audit_backlog_limit=8192"'
+  notify: update grub
+  when: suse15cis_rule_4_1_2_4
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_4_1_2_4
+
+- name: SCORED | 4.2.2.3 | PATCH | Ensure journald is configured to write logfiles to persistent disk
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^Storage='
+    line: 'Storage=persistent'
+    create: yes
+  when: suse15cis_rule_4_2_2_3
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_4.2.2.3
+
+- name: SCORED | 4.2.2.1 | PATCH | Ensure journald is configured to send logs to rsyslog
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^ForwardToSyslog='
+    line: 'ForwardToSyslog=yes'
+    create: yes
+  when: suse15cis_rule_4_2_2_1
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_4.2.2.1
+
+- name: SCORED | 3.3.1 | PATCH | Ensure IP forwarding is disabled (IPv4)
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.ip_forward'
+    line: 'net.ipv4.ip_forward = 0'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_1
+  tags:
+    - rule_3.3.1
+    - ip_forwarding
+
+- name: SCORED | 3.3.1 | PATCH | Ensure IP forwarding is disabled (IPv6)
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv6_sysctl.conf
+    regexp: '^net.ipv6.conf.all.forwarding'
+    line: 'net.ipv6.conf.all.forwarding = 0'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_1
+  tags:
+    - rule_3.3.1
+    - ipv6_forwarding
+
+- name: SCORED | 3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.tcp_syncookies'
+    line: 'net.ipv4.tcp_syncookies = 1'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_10
+  tags:
+    - rule_3.3.10
+    - tcp_syncookies
+
+- name: SCORED | 3.3.2 | PATCH | Ensure packet redirect sending is disabled
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.send_redirects'
+    line: 'net.ipv4.conf.all.send_redirects = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_2
+  tags:
+    - rule_3.3.2
+    - send_redirects
+
+- name: SCORED | 3.3.3 | PATCH | Ensure bogus ICMP responses are ignored
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.icmp_ignore_bogus_error_responses'
+    line: 'net.ipv4.icmp_ignore_bogus_error_responses = 1'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_3
+  tags:
+    - rule_3.3.3
+    - icmp_bogus
+
+- name: SCORED | 3.3.4 | PATCH | Ensure broadcast ICMP requests are ignored
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.icmp_echo_ignore_broadcasts'
+    line: 'net.ipv4.icmp_echo_ignore_broadcasts = 1'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_4
+  tags:
+    - rule_3.3.4
+    - icmp_broadcast
+
+- name: SCORED | 3.3.6 | PATCH | Ensure ICMP redirects are not accepted
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.accept_redirects'
+    line: 'net.ipv4.conf.all.accept_redirects = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_5
+  tags:
+    - rule_3.3.5
+    - icmp_redirects
+
+- name: SCORED | 3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.secure_redirects'
+    line: 'net.ipv4.conf.all.secure_redirects = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_6
+  tags:
+    - rule_3.3.6
+    - secure_icmp_redirects
+
+- name: SCORED | 3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.rp_filter'
+    line: 'net.ipv4.conf.all.rp_filter = 1'
+    create: yes
+      #notify: Reload sysctl
+  when: suse15cis_rule_3_3_7
+  tags:
+    - rule_3.3.7
+    - rp_filter
+
+- name: SCORED | 3.3.8 | PATCH | Ensure source routed packets are not accepted
+  lineinfile:
+    path: /etc/sysctl.d/60-netipv4_sysctl.conf
+    regexp: '^net.ipv4.conf.all.accept_source_route'
+    line: 'net.ipv4.conf.all.accept_source_route = 0'
+    create: yes
+      # notify: Reload sysctl
+  when: suse15cis_rule_3_3_8
+  tags:
+    - rule_3.3.8
+    - source_route
+
+- name: SCORED | 3.3.9 | PATCH | Ensure suspicious packets are logged
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: "net.ipv4.conf.all.log_martians = 1"
+    state: present
+      #notify: Restart Network  # Notify the handler without defining it here
+
+    #handlers:
+    #- name: Restart Network
+    #service:
+    # name: networking
+    # state: restarted

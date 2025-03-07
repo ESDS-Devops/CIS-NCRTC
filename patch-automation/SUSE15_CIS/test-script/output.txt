@@ -1,0 +1,258 @@
+1.1.1.1;N/A;Ensure mounting of cramfs filesystems is disabled;N/A;N/A;fail
+1.1.1.2;N/A;Ensure mounting of freevxfs filesystems is disabled;N/A;N/A;fail
+1.1.1.3;N/A;Ensure mounting of jffs2 filesystems is disabled;N/A;N/A;fail
+1.1.1.4;N/A;Ensure mounting of hfs filesystems is disabled;N/A;N/A;fail
+1.1.1.5;N/A;Ensure mounting of hfsplus filesystems is disabled;N/A;N/A;fail
+1.1.1.6;1.1.1.1;Ensure mounting of squashfs filesystems is disabled;suse15cis_rule_1_1_1_1;21;successfully enabled
+1.1.1.7;1.1.1.2;Ensure mounting of udf filesystems is disabled;suse15cis_rule_1_1_1_2;22;successfully enabled
+1.1.10;N/A;Disable USB Storage;N/A;N/A;fail
+1.1.2.1;N/A;Ensure /tmp is a separate partition;N/A;N/A;fail
+1.1.8.1;N/A;Ensure nodev option set on /dev/shm partition;N/A;N/A;fail
+1.1.8.3;N/A;Ensure nosuid option set on /dev/shm partition;N/A;N/A;fail
+1.1.9;1.1.23;Disable Automounting;suse15cis_rule_1_1_23;45;successfully enabled
+1.2.1;1.4.1;Ensure AIDE is installed;suse15cis_rule_1_4_1;52;successfully enabled
+1.2.2;1.4.2;Ensure filesystem integrity is regularly checked;suse15cis_rule_1_4_2;53;successfully enabled
+1.3.1;N/A;Ensure updates, patches, and additional security software are installed;N/A;N/A;fail
+1.3.2;1.2.2;Ensure package manager repositories are configured;suse15cis_rule_1_2_2;47;successfully enabled
+1.3.3;1.2.1;Ensure GPG keys are configured;suse15cis_rule_1_2_1;46;successfully enabled
+1.4.2;N/A;Ensure permissions on bootloader config are configured;N/A;N/A;fail
+1.4.3;N/A;Ensure authentication required for single user mode;N/A;N/A;fail
+1.5.1;N/A;Ensure prelink is not installed;N/A;N/A;fail
+1.5.2;N/A;Ensure address space layout randomization (ASLR) is enabled;N/A;N/A;fail
+1.5.3;N/A;Ensure ptrace_scope is restricted;N/A;N/A;fail
+1.5.4;N/A;Ensure Automatic Error Reporting is not enabled;N/A;N/A;fail
+1.5.5;1.6.1;Ensure core dumps are restricted;suse15cis_rule_1_6_1;57;successfully enabled
+1.6.1.1;N/A;Ensure AppArmor is installed;N/A;N/A;fail
+1.7.1;1.8.1.1;Ensure message of the day is configured properly;suse15cis_rule_1_8_1_1;64;successfully enabled
+1.7.2;N/A;Ensure local login warning banner is configured properly;N/A;N/A;fail
+1.7.3;N/A;Ensure remote login warning banner is configured properly;N/A;N/A;fail
+1.7.4;1.8.1.4;Ensure permissions on /etc/motd are configured;suse15cis_rule_1_8_1_4;67;successfully enabled
+1.7.5;1.8.1.5;Ensure permissions on /etc/issue are configured;suse15cis_rule_1_8_1_5;68;successfully enabled
+1.7.6;1.8.1.6;Ensure permissions on /etc/issue.net are configured;suse15cis_rule_1_8_1_6;69;successfully enabled
+1.8.1;N/A;Ensure GNOME Display Manager is removed;N/A;N/A;fail
+1.8.10;N/A;Ensure XDCMP is not enabled;N/A;N/A;fail
+1.8.2;N/A;Ensure GDM login banner is configured;N/A;N/A;fail
+1.8.3;N/A;Ensure GDM disable-user-list option is enabled;N/A;N/A;fail
+1.8.4;N/A;Ensure GDM screen locks when the user is idle;N/A;N/A;fail
+1.8.5;N/A;Ensure GDM screen locks cannot be overridden;N/A;N/A;fail
+1.8.6;N/A;Ensure GDM automatic mounting of removable media is disabled;N/A;N/A;fail
+1.8.7;N/A;Ensure GDM disabling automatic mounting of removable media is not overridden;N/A;N/A;fail
+1.8.8;N/A;Ensure GDM autorun-never is enabled;N/A;N/A;fail
+1.8.9;N/A;Ensure GDM autorun-never is not overridden;N/A;N/A;fail
+2.1.1.1;N/A;Ensure a single time synchronization daemon is in use;N/A;N/A;fail
+2.1.2.1;N/A;Ensure chrony is configured with authorized timeserver;N/A;N/A;fail
+2.1.2.2;N/A;Ensure chrony is running as user _chrony;N/A;N/A;fail
+2.1.2.3;N/A;Ensure chrony is enabled and running;N/A;N/A;fail
+2.1.3.1;N/A;Ensure systemd-timesyncd configured with authorized timeserver;N/A;N/A;fail
+2.1.3.2;N/A;Ensure systemd-timesyncd is enabled and running;N/A;N/A;fail
+2.1.4.1;N/A;Ensure ntp access control is configured;N/A;N/A;fail
+2.1.4.2;N/A;Ensure ntp is configured with authorized timeserver;N/A;N/A;fail
+2.1.4.3;N/A;Ensure ntp is running as user ntp;N/A;N/A;fail
+2.1.4.4;N/A;Ensure ntp is enabled and running;N/A;N/A;fail
+2.2.1;2.2.2;Ensure X Window System is not installed;suse15cis_rule_2_2_2;78;successfully enabled
+2.2.10;N/A;Ensure IMAP and POP3 server are not installed;N/A;N/A;fail
+2.2.11;N/A;Ensure Samba is not installed;N/A;N/A;fail
+2.2.12;2.2.14;Ensure HTTP Proxy Server is not installed;suse15cis_rule_2_2_14;90;successfully enabled
+2.2.13;N/A;Ensure SNMP Server is not installed;N/A;N/A;fail
+2.2.14;N/A;Ensure NIS Server is not installed;N/A;N/A;fail
+2.2.15;N/A;Ensure dnsmasq is not installed;N/A;N/A;fail
+2.2.16;N/A;Ensure mail transfer agent is configured for local-only mode;N/A;N/A;fail
+2.2.17;N/A;Ensure rsync service is either not installed or is masked;N/A;N/A;fail
+2.2.2;N/A;Ensure Avahi Server is not installed;N/A;N/A;fail
+2.2.3;N/A;Ensure CUPS is not installed;N/A;N/A;fail
+2.2.4;N/A;Ensure DHCP Server is not installed;N/A;N/A;fail
+2.2.5;N/A;Ensure LDAP server is not installed;N/A;N/A;fail
+2.2.6;2.2.18;Ensure NFS is not installed;suse15cis_rule_2_2_18;94;successfully enabled
+2.2.7;N/A;Ensure DNS Server is not installed;N/A;N/A;fail
+2.2.8;2.2.10;Ensure FTP Server is not installed;suse15cis_rule_2_2_10;86;successfully enabled
+2.2.9;2.2.11;Ensure HTTP server is not installed;suse15cis_rule_2_2_11;87;successfully enabled
+2.3.1;2.3.1;Ensure NIS Client is not installed;suse15cis_rule_2_3_1;96;successfully enabled
+2.3.2;2.3.2;Ensure rsh client is not installed;suse15cis_rule_2_3_2;97;successfully enabled
+2.3.3;2.3.3;Ensure talk client is not installed;suse15cis_rule_2_3_3;98;successfully enabled
+2.3.5;2.3.5;Ensure LDAP client is not installed;suse15cis_rule_2_3_5;100;successfully enabled
+2.3.6;N/A;Ensure  RPC is not installed;N/A;N/A;fail
+2.4;2.4;Ensure nonessential services are removed or masked;suse15cis_rule_2_4;N/A;fail
+3.1.1;N/A;Ensure IPv6 status is identified;N/A;N/A;fail
+3.1.2;3.1.2;Ensure wireless interfaces are disabled;suse15cis_rule_3_1_2;N/A;fail
+3.1.3;N/A;Ensure bluetooth is disabled;N/A;N/A;fail
+3.1.4;3.4.1;Ensure DCCP is disabled;suse15cis_rule_3_4_1;115;successfully enabled
+3.1.5;3.4.1;Ensure SCTP is disabled;suse15cis_rule_3_4_1;115;successfully enabled
+3.1.6;N/A;Ensure RDS is disabled;N/A;N/A;fail
+3.1.7;N/A;Ensure TIPC is disabled;N/A;N/A;fail
+3.2.1;3.2.2;Ensure packet redirect sending is disabled;suse15cis_rule_3_2_2;105;successfully enabled
+3.2.2;3.2.1;Ensure IP forwarding is disabled;suse15cis_rule_3_2_1;104;successfully enabled
+3.3.1;3.3.1;Ensure source routed packets are not accepted;suse15cis_rule_3_3_1;106;successfully enabled
+3.3.2;N/A;Ensure ICMP redirects are not accepted;N/A;N/A;fail
+3.3.3;3.3.3;Ensure secure ICMP redirects are not accepted;suse15cis_rule_3_3_3;108;successfully enabled
+3.3.4;N/A;Ensure suspicious packets are logged;N/A;N/A;fail
+3.3.5;N/A;Ensure broadcast ICMP requests are ignored;N/A;N/A;fail
+3.3.6;N/A;Ensure bogus ICMP responses are ignored;N/A;N/A;fail
+3.3.7;N/A;Ensure Reverse Path Filtering is enabled;N/A;N/A;fail
+3.3.8;N/A;Ensure TCP SYN Cookies is enabled;N/A;N/A;fail
+3.3.9;3.3.9;Ensure IPv6 router advertisements are not accepted;suse15cis_rule_3_3_9;114;successfully enabled
+3.4.1.1;N/A;Ensure ufw is installed;N/A;N/A;fail
+3.4.1.2;N/A;Ensure iptables-persistent is not installed with ufw;N/A;N/A;fail
+3.4.1.3;N/A;Ensure ufw service is enabled;N/A;N/A;fail
+3.4.1.4;N/A;Ensure ufw loopback traffic is configured;N/A;N/A;fail
+3.4.1.5;N/A;Ensure ufw outbound connections are configured;N/A;N/A;fail
+3.4.1.6;N/A;Ensure ufw firewall rules exist for all open ports;N/A;N/A;fail
+3.4.1.7;N/A;Ensure ufw default deny firewall policy;N/A;N/A;fail
+3.4.2.1;N/A;Ensure nftables is installed;N/A;N/A;fail
+3.4.2.10;N/A;Ensure nftables rules are permanent;N/A;N/A;fail
+3.4.2.2;N/A;Ensure ufw is uninstalled or disabled with nftables;N/A;N/A;fail
+3.4.2.3;N/A;Ensure iptables are flushed with nftables;N/A;N/A;fail
+3.4.2.4;N/A;Ensure a nftables table exists;N/A;N/A;fail
+3.4.2.5;N/A;Ensure nftables base chains exist;N/A;N/A;fail
+3.4.2.6;N/A;Ensure nftables loopback traffic is configured;N/A;N/A;fail
+3.4.2.7;N/A;Ensure nftables outbound and established connections are configured;N/A;N/A;fail
+3.4.2.8;N/A;Ensure nftables default deny firewall policy;N/A;N/A;fail
+3.4.2.9;N/A;Ensure nftables service is enabled;N/A;N/A;fail
+3.4.3.1.1;N/A;Ensure iptables packages are installed;N/A;N/A;fail
+3.4.3.1.2;N/A;Ensure nftables is not installed with iptables;N/A;N/A;fail
+3.4.3.1.3;N/A;Ensure ufw is uninstalled or disabled with iptables;N/A;N/A;fail
+3.4.3.2.1;N/A;Ensure iptables default deny firewall policy;N/A;N/A;fail
+3.4.3.2.2;N/A;Ensure iptables loopback traffic is configured;N/A;N/A;fail
+3.4.3.2.3;N/A;Ensure iptables outbound and established connections are configured;N/A;N/A;fail
+3.4.3.2.4;N/A;Ensure iptables firewall rules exist for all open ports;N/A;N/A;fail
+3.4.3.3.1;N/A;Ensure ip6tables default deny firewall policy;N/A;N/A;fail
+3.4.3.3.2;N/A;Ensure ip6tables loopback traffic is configured;N/A;N/A;fail
+3.4.3.3.3;N/A;Ensure ip6tables outbound and established connections are configured;N/A;N/A;fail
+3.4.3.3.4;N/A;Ensure ip6tables firewall rules exist for all open ports;N/A;N/A;fail
+4.1.1;N/A;Ensure cron daemon is enabled and active;N/A;N/A;fail
+4.1.2;5.1.2;Ensure permissions on /etc/crontab are configured;suse15cis_rule_5_1_2;158;successfully enabled
+4.1.3;5.1.3;Ensure permissions on /etc/cron.hourly are configured;suse15cis_rule_5_1_3;159;successfully enabled
+4.1.4;5.1.4;Ensure permissions on /etc/cron.daily are configured;suse15cis_rule_5_1_4;160;successfully enabled
+4.1.5;5.1.5;Ensure permissions on /etc/cron.weekly are configured;suse15cis_rule_5_1_5;161;successfully enabled
+4.1.6;5.1.6;Ensure permissions on /etc/cron.monthly are configured;suse15cis_rule_5_1_6;162;successfully enabled
+4.1.7;5.1.7;Ensure permissions on /etc/cron.d are configured;suse15cis_rule_5_1_7;163;successfully enabled
+4.1.8;5.1.8;Ensure cron is restricted to authorized users;suse15cis_rule_5_1_8;164;successfully enabled
+4.1.9;5.1.9;Ensure at is restricted to authorized users;suse15cis_rule_5_1_9;165;successfully enabled
+4.2.1;5.2.1;Ensure permissions on /etc/ssh/sshd_config are configured;suse15cis_rule_5_2_1;166;successfully enabled
+4.2.10;5.2.12;Ensure SSH PermitUserEnvironment is disabled;suse15cis_rule_5_2_12;177;successfully enabled
+4.2.11;5.2.8;Ensure SSH IgnoreRhosts is enabled;suse15cis_rule_5_2_8;173;successfully enabled
+4.2.12;5.2.6;Ensure SSH X11 forwarding is disabled;suse15cis_rule_5_2_6;171;successfully enabled
+4.2.13;5.2.13;Ensure only strong Ciphers are used;suse15cis_rule_5_2_13;178;successfully enabled
+4.2.14;N/A;Ensure only strong MAC algorithms are used;N/A;N/A;fail
+4.2.15;N/A;Ensure only strong Key Exchange algorithms are used;N/A;N/A;fail
+4.2.16;5.2.20;Ensure SSH AllowTcpForwarding is disabled;suse15cis_rule_5_2_20;185;successfully enabled
+4.2.17;5.2.18;Ensure SSH warning banner is configured;suse15cis_rule_5_2_18;183;successfully enabled
+4.2.18;5.2.7;Ensure SSH MaxAuthTries is set to 4 or less;suse15cis_rule_5_2_7;172;successfully enabled
+4.2.19;5.2.21;Ensure SSH MaxStartups is configured;suse15cis_rule_5_2_21;186;successfully enabled
+4.2.2;N/A;Ensure permissions on SSH private host key files are configured;N/A;N/A;fail
+4.2.20;N/A;Ensure SSH LoginGraceTime is set to one minute or less;N/A;N/A;fail
+4.2.21;N/A;Ensure SSH MaxSessions is set to 10 or less;N/A;N/A;fail
+4.2.22;5.2.16;Ensure SSH Idle Timeout Interval is configured;suse15cis_rule_5_2_16;181;successfully enabled
+4.2.3;N/A;Ensure permissions on SSH public host key files are configured;N/A;N/A;fail
+4.2.4;5.2.4;Ensure SSH access is limited;suse15cis_rule_5_2_4;169;successfully enabled
+4.2.5;5.2.5;Ensure SSH LogLevel is appropriate;suse15cis_rule_5_2_5;170;successfully enabled
+4.2.6;5.2.19;Ensure SSH PAM is enabled;suse15cis_rule_5_2_19;184;successfully enabled
+4.2.7;5.2.10;Ensure SSH root login is disabled;suse15cis_rule_5_2_10;175;successfully enabled
+4.2.8;5.2.9;Ensure SSH HostbasedAuthentication is disabled;suse15cis_rule_5_2_9;174;successfully enabled
+4.2.9;5.2.11;Ensure SSH PermitEmptyPasswords is disabled;suse15cis_rule_5_2_11;176;successfully enabled
+4.3.1;1.3.1;Ensure sudo is installed;suse15cis_rule_1_3_1;49;successfully enabled
+4.3.2;N/A;Ensure sudo commands use pty;N/A;N/A;fail
+4.3.3;N/A;Ensure sudo log file exists;N/A;N/A;fail
+4.3.4;N/A;Ensure users must provide password for privilege escalation;N/A;N/A;fail
+4.3.5;N/A;Ensure re-authentication for privilege escalation is not disabled globally;N/A;N/A;fail
+4.3.6;N/A;Ensure sudo authentication timeout is configured correctly;N/A;N/A;fail
+4.3.7;5.6;Ensure access to the su command is restricted;suse15cis_rule_5_6;202;successfully enabled
+4.4.1;5.3.1;Ensure password creation requirements are configured;suse15cis_rule_5_3_1;188;successfully enabled
+4.4.2;N/A;Ensure lockout for failed password attempts is configured;N/A;N/A;fail
+4.4.3;5.3.3;Ensure password reuse is limited;suse15cis_rule_5_3_3;190;successfully enabled
+4.4.4;N/A;Ensure strong password hashing algorithm is configured;N/A;N/A;fail
+4.4.5;N/A;Ensure all current passwords uses the configured hashing algorithm;N/A;N/A;fail
+4.5.1.1;N/A;Ensure minimum days between password changes is  configured;N/A;N/A;fail
+4.5.1.2;5.4.1.2;Ensure password expiration is 365 days or less;suse15cis_rule_5_4_1_2;192;successfully enabled
+4.5.1.3;N/A;Ensure password expiration warning days is 7 or more;N/A;N/A;fail
+4.5.1.4;5.4.1.5;Ensure inactive password lock is 30 days or less;suse15cis_rule_5_4_1_5;195;successfully enabled
+4.5.1.5;N/A;Ensure all users last password change date is in the past;N/A;N/A;fail
+4.5.1.6;N/A;Ensure the number of changed characters in a new password is configured;N/A;N/A;fail
+4.5.1.7;N/A;Ensure preventing the use of dictionary words for passwords is configured;N/A;N/A;fail
+4.5.2;5.4.2;Ensure system accounts are secured;suse15cis_rule_5_4_2;197;successfully enabled
+4.5.3;N/A;Ensure default group for the root account is GID 0;N/A;N/A;fail
+4.5.4;N/A;Ensure default user umask is 027 or more restrictive;N/A;N/A;fail
+4.5.5;5.4.4;Ensure default user shell timeout is configured;suse15cis_rule_5_4_4;199;successfully enabled
+4.5.6;N/A;Ensure nologin is not listed in /etc/shells;N/A;N/A;fail
+4.5.7;N/A;Ensure maximum number of same consecutive characters in a password is configured;N/A;N/A;fail
+5.1.1.1.1;N/A;Ensure systemd-journal-remote is installed;N/A;N/A;fail
+5.1.1.1.2;N/A;Ensure systemd-journal-remote is configured;N/A;N/A;fail
+5.1.1.1.3;N/A;Ensure systemd-journal-remote is enabled;N/A;N/A;fail
+5.1.1.1.4;N/A;Ensure journald is not configured to receive logs from a remote client;N/A;N/A;fail
+5.1.1.2;N/A;Ensure journald service is enabled;N/A;N/A;fail
+5.1.1.3;N/A;Ensure journald is configured to compress large log files;N/A;N/A;fail
+5.1.1.4;N/A;Ensure journald is configured to write logfiles to persistent disk;N/A;N/A;fail
+5.1.1.5;N/A;Ensure journald is not configured to send logs to rsyslog;N/A;N/A;fail
+5.1.1.6;N/A;Ensure journald log rotation is configured per site policy;N/A;N/A;fail
+5.1.1.7;N/A;Ensure journald default file permissions configured;N/A;N/A;fail
+5.1.2.1;N/A;Ensure rsyslog is installed;N/A;N/A;fail
+5.1.2.2;N/A;Ensure rsyslog service is enabled;N/A;N/A;fail
+5.1.2.3;N/A;Ensure journald is configured to send logs to rsyslog;N/A;N/A;fail
+5.1.2.4;N/A;Ensure rsyslog default file permissions are configured;N/A;N/A;fail
+5.1.2.5;4.2.1.4;Ensure logging is configured;suse15cis_rule_4_2_1_4;149;successfully enabled
+5.1.2.6;N/A;Ensure rsyslog is configured to send logs to a remote log host;N/A;N/A;fail
+5.1.2.7;N/A;Ensure rsyslog is not configured to receive logs from a remote client;N/A;N/A;fail
+5.1.3;N/A;Ensure all logfiles have appropriate access configured;N/A;N/A;fail
+5.2.1.1;N/A;Ensure auditd is installed;N/A;N/A;fail
+5.2.1.2;N/A;Ensure auditd service is enabled and active;N/A;N/A;fail
+5.2.1.3;N/A;Ensure auditing for processes that start prior to auditd is enabled;N/A;N/A;fail
+5.2.1.4;4.1.2.4;Ensure audit_backlog_limit is sufficient;suse15cis_rule_4_1_2_4;129;successfully enabled
+5.2.2.1;4.1.2.1;Ensure audit log storage size is configured;suse15cis_rule_4_1_2_1;126;successfully enabled
+5.2.2.2;4.1.2.2;Ensure audit logs are not automatically deleted;suse15cis_rule_4_1_2_2;127;successfully enabled
+5.2.2.3;4.1.2.3;Ensure system is disabled when audit logs are full;suse15cis_rule_4_1_2_3;128;successfully enabled
+5.2.3.1;N/A;Ensure changes to system administration scope (sudoers) is collected;N/A;N/A;fail
+5.2.3.10;4.1.12;Ensure successful file system mounts are collected;suse15cis_rule_4_1_12;140;successfully enabled
+5.2.3.11;4.1.8;Ensure session initiation information is collected;suse15cis_rule_4_1_8;136;successfully enabled
+5.2.3.12;4.1.7;Ensure login and logout events are collected;suse15cis_rule_4_1_7;135;successfully enabled
+5.2.3.13;4.1.13;Ensure file deletion events by users are collected;suse15cis_rule_4_1_13;141;successfully enabled
+5.2.3.14;N/A;Ensure events that modify the system's Mandatory Access Controls are collected;N/A;N/A;fail
+5.2.3.15;N/A;Ensure successful and unsuccessful attempts to use the chcon command are recorded;N/A;N/A;fail
+5.2.3.16;N/A;Ensure successful and unsuccessful attempts to use the setfacl command are recorded;N/A;N/A;fail
+5.2.3.17;N/A;Ensure successful and unsuccessful attempts to use the chacl command are recorded;N/A;N/A;fail
+5.2.3.18;N/A;Ensure successful and unsuccessful attempts to use the usermod command are recorded;N/A;N/A;fail
+5.2.3.19;N/A;Ensure kernel module loading unloading and modification is collected;N/A;N/A;fail
+5.2.3.2;N/A;Ensure actions as another user are always logged;N/A;N/A;fail
+5.2.3.20;4.1.17;Ensure the audit configuration is immutable;suse15cis_rule_4_1_17;145;successfully enabled
+5.2.3.21;N/A;Ensure the running and on disk configuration is the same;N/A;N/A;fail
+5.2.3.3;N/A;Ensure events that modify the sudo log file are collected;N/A;N/A;fail
+5.2.3.4;N/A;Ensure events that modify date and time information are collected;N/A;N/A;fail
+5.2.3.5;N/A;Ensure events that modify the system's network environment are collected;N/A;N/A;fail
+5.2.3.6;N/A;Ensure use of privileged commands are collected;N/A;N/A;fail
+5.2.3.7;N/A;Ensure unsuccessful file access attempts are collected;N/A;N/A;fail
+5.2.3.8;N/A;Ensure events that modify user/group information are collected;N/A;N/A;fail
+5.2.3.9;N/A;Ensure discretionary access control permission modification events are collected;N/A;N/A;fail
+5.2.4.1;N/A;Ensure audit log files are mode 0640 or less permissive;N/A;N/A;fail
+5.2.4.10;N/A;Ensure audit tools belong to group root;N/A;N/A;fail
+5.2.4.11;N/A;Ensure cryptographic mechanisms are used to protect the integrity of audit tools;N/A;N/A;fail
+5.2.4.2;N/A;Ensure only authorized users own audit log files;N/A;N/A;fail
+5.2.4.3;N/A;Ensure only authorized groups are assigned ownership of audit log files;N/A;N/A;fail
+5.2.4.4;N/A;Ensure the audit log directory is 0750 or more restrictive;N/A;N/A;fail
+5.2.4.5;N/A;Ensure audit configuration files are 640 or more restrictive;N/A;N/A;fail
+5.2.4.6;N/A;Ensure audit configuration files are owned by root;N/A;N/A;fail
+5.2.4.7;N/A;Ensure audit configuration files belong to group root;N/A;N/A;fail
+5.2.4.8;N/A;Ensure audit tools are 755 or more restrictive;N/A;N/A;fail
+5.2.4.9;N/A;Ensure audit tools are owned by root;N/A;N/A;fail
+6.1.1;6.1.2;Ensure permissions on /etc/passwd are configured;suse15cis_rule_6_1_2;205;successfully enabled
+6.1.10;N/A;Ensure permissions on /etc/opasswd are configured;N/A;N/A;fail
+6.1.11;N/A;Ensure world writable files and directories are secured;N/A;N/A;fail
+6.1.12;N/A;Ensure no unowned or ungrouped files or directories exist;N/A;N/A;fail
+6.1.13;N/A;Ensure SUID and SGID files are reviewed;N/A;N/A;fail
+6.1.2;6.1.5;Ensure permissions on /etc/passwd- are configured;suse15cis_rule_6_1_5;208;successfully enabled
+6.1.3;6.1.4;Ensure permissions on /etc/group are configured;suse15cis_rule_6_1_4;207;successfully enabled
+6.1.4;6.1.7;Ensure permissions on /etc/group- are configured;suse15cis_rule_6_1_7;210;successfully enabled
+6.1.5;6.1.3;Ensure permissions on /etc/shadow are configured;suse15cis_rule_6_1_3;206;successfully enabled
+6.1.6;6.1.6;Ensure permissions on /etc/shadow- are configured;suse15cis_rule_6_1_6;209;successfully enabled
+6.1.7;N/A;Ensure permissions on /etc/gshadow are configured;N/A;N/A;fail
+6.1.8;N/A;Ensure permissions on /etc/gshadow- are configured;N/A;N/A;fail
+6.1.9;N/A;Ensure permissions on /etc/shells are configured;N/A;N/A;fail
+6.2.1;6.2.1;Ensure accounts in /etc/passwd use shadowed passwords;suse15cis_rule_6_2_1;216;successfully enabled
+6.2.10;N/A;Ensure root is the only UID 0 account;N/A;N/A;fail
+6.2.11;N/A;Ensure local interactive user home directories are configured;N/A;N/A;fail
+6.2.12;N/A;Ensure local interactive user dot files access is configured;N/A;N/A;fail
+6.2.2;6.2.2;Ensure /etc/shadow password fields are not empty;suse15cis_rule_6_2_2;217;successfully enabled
+6.2.3;6.2.13;Ensure all groups in /etc/passwd exist in /etc/group;suse15cis_rule_6_2_13;228;successfully enabled
+6.2.4;6.2.18;Ensure shadow group is empty;suse15cis_rule_6_2_18;233;successfully enabled
+6.2.5;6.2.14;Ensure no duplicate UIDs exist;suse15cis_rule_6_2_14;229;successfully enabled
+6.2.6;6.2.15;Ensure no duplicate GIDs exist;suse15cis_rule_6_2_15;230;successfully enabled
+6.2.7;6.2.16;Ensure no duplicate user names exist;suse15cis_rule_6_2_16;231;successfully enabled
+6.2.8;6.2.17;Ensure no duplicate group names exist;suse15cis_rule_6_2_17;232;successfully enabled
+6.2.9;6.2.4;Ensure root PATH Integrity;suse15cis_rule_6_2_4;219;successfully enabled
